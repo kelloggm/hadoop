@@ -357,6 +357,13 @@
       <artifactId>wildfly-openssl-java</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>net.sridharan.objectconstruction</groupId>
+      <artifactId>object-construction-qual</artifactId>
+      <version>0.1.10-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    
   </dependencies>
 
   <build>
