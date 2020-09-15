@@ -223,10 +223,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
-      <!--      <version>0.5.1</version>-->
       <version>3.6.1</version>
-      <!--      <scope>system</scope>-->
-      <!--      <systemPath>${env.CHECKERFRAMEWORK}/checker/dist/jdk8.jar</systemPath>-->
     </dependency>
     <dependency>
       <groupId>com.google.errorprone</groupId>
@@ -585,18 +582,13 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
                 <path>
                   <groupId>org.checkerframework</groupId>
                   <artifactId>checker</artifactId>
-                  <!--              <version>0.5.1</version>-->
                   <version>3.6.1</version>
-                  <!--              <version>3.5.0</version>-->
                 </path>
               </annotationProcessorPaths>
               <compilerArgs combine.children="append">
                 <!-- If using JDK 8, use only the two arguments immediately below. -->
                 <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
-                <!-- Optionally, -Awarns turns type-checking errors into warnings. -->
-                <!--            <arg>-Awarns</arg>-->
                 <arg>-Astubs=/Users/nargesshadab/Intelij_Workspace/new-branch/experiment-checker/object-construction-checker/object-construction-checker/stubs</arg>
-                <!--            <arg>-Astubs=/object-construction-checker/stubs</arg>-->
               </compilerArgs>
 
               <testExcludes>
