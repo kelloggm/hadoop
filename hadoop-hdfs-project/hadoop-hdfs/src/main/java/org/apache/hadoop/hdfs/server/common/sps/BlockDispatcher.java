@@ -47,6 +47,7 @@ import org.apache.hadoop.hdfs.server.protocol.BlockStorageMovementCommand.BlockM
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.token.Token;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +101,7 @@ public class BlockDispatcher {
    * @return status of the block movement
    */
   public BlockMovementStatus moveBlock(BlockMovingInfo blkMovingInfo,
-      SaslDataTransferClient saslClient, ExtendedBlock eb, Socket sock,
+      SaslDataTransferClient saslClient, ExtendedBlock eb, @Owning Socket sock,
       DataEncryptionKeyFactory km, Token<BlockTokenIdentifier> accessToken) {
     LOG.info("Start moving block:{} from src:{} to destin:{} to satisfy "
         + "storageType, sourceStoragetype:{} and destinStoragetype:{}",

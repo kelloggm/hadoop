@@ -20,6 +20,7 @@ package org.apache.hadoop.streaming.mapreduce;
 
 import java.io.IOException;
 
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -46,8 +47,8 @@ public abstract class StreamBaseRecordReader extends RecordReader<Text, Text> {
   // custom JobConf properties for this class are prefixed with this namespace
   final static String CONF_NS = "stream.recordreader.";
 
-  public StreamBaseRecordReader(FSDataInputStream in, FileSplit split,
-      TaskAttemptContext context, Configuration conf, FileSystem fs)
+  public StreamBaseRecordReader(@Owning FSDataInputStream in, FileSplit split,
+                                TaskAttemptContext context, Configuration conf, FileSystem fs)
       throws IOException {
     in_ = in;
     split_ = split;

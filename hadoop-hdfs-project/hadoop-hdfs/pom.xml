@@ -223,7 +223,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
-      <version>3.6.1</version>
+      <version>3.7.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.errorprone</groupId>
@@ -240,13 +240,11 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <build>
     <plugins>
-
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
           <fork>true</fork>
-          <!-- If using JDK 8, add source and target. -->
           <source>1.8</source>
           <target>1.8</target>
           <showWarnings>true</showWarnings>
@@ -263,13 +261,13 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <path>
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
-              <version>3.6.1</version>
+              <version>3.7.0</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs combine.children="append">
             <!-- If using JDK 8, use only the two arguments immediately below. -->
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
-            <arg>-Astubs=/Users/nargesshadab/Intelij_Workspace/new-branch/experiment-checker/object-construction-checker/object-construction-checker/stubs</arg>
+<!--            <arg>-Awarns</arg>-->
           </compilerArgs>
         </configuration>
       </plugin>

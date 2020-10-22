@@ -30,6 +30,7 @@ import org.apache.hadoop.mapred.Reporter;
 import org.apache.hadoop.mapred.RecordReader;
 import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.mapred.JobConf;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ public abstract class StreamBaseRecordReader implements RecordReader<Text, Text>
   // custom JobConf properties for this class are prefixed with this namespace
   final static String CONF_NS = "stream.recordreader.";
 
-  public StreamBaseRecordReader(FSDataInputStream in, FileSplit split, Reporter reporter,
+  public StreamBaseRecordReader(@Owning FSDataInputStream in, FileSplit split, Reporter reporter,
                                 JobConf job, FileSystem fs) throws IOException {
     in_ = in;
     split_ = split;

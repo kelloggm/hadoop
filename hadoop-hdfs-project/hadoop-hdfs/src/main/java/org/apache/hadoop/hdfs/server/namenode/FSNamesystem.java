@@ -334,6 +334,7 @@ import org.apache.hadoop.util.VersionInfo;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Appender;
 import org.apache.log4j.AsyncAppender;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.eclipse.jetty.util.ajax.JSON;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -4537,6 +4538,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     }
   }
 
+  @NotOwning
   public FSImage getFSImage() {
     return fsImage;
   }
@@ -6640,6 +6642,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
 
   /** @return the FSDirectory. */
   @Override
+  @NotOwning
   public FSDirectory getFSDirectory() {
     return dir;
   }

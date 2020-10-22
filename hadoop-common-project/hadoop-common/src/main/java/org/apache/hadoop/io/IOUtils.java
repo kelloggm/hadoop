@@ -294,6 +294,7 @@ public class IOUtils {
    *
    * @param stream the Stream to close
    */
+  @EnsuresCalledMethods(value = "#1", methods = "close")
   public static void closeStream(java.io.Closeable stream) {
     if (stream != null) {
       cleanupWithLogger(null, stream);

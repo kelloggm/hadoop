@@ -32,12 +32,83 @@
     <!-- Antrun cannot resolve yarn.basedir, so we need to setup something else -->
     <dev-support.relative.dir>dev-support</dev-support.relative.dir>
     <hadoop.common.build.dir>${basedir}/../../../hadoop-common-project/hadoop-common/target</hadoop.common.build.dir>
+    <errorProneJavac>${com.google.errorprone:javac:jar}</errorProneJavac>
   </properties>
 
   <!-- Do not add dependencies here, add them to the POM of the leaf module -->
 
+  <dependencies>
+    <dependency>
+      <groupId>org.checkerframework</groupId>
+      <artifactId>checker-qual</artifactId>
+      <version>3.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>javac</artifactId>
+      <version>9+181-r4173-1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sridharan.objectconstruction</groupId>
+      <artifactId>object-construction-qual</artifactId>
+      <version>0.1.10-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
+      <version>2.0.12</version>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <fork>true</fork>
+          <source>1.8</source>
+          <target>1.8</target>
+          <showWarnings>true</showWarnings>
+          <compilerArguments>
+            <Xmaxerrs>10000</Xmaxerrs>
+            <Xmaxwarns>10000</Xmaxwarns>
+          </compilerArguments>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>net.sridharan.objectconstruction</groupId>
+              <artifactId>object-construction-checker</artifactId>
+              <version>0.1.10-SNAPSHOT</version>
+            </path>
+            <path>
+              <groupId>org.checkerframework</groupId>
+              <artifactId>checker</artifactId>
+              <version>3.7.0</version>
+            </path>
+          </annotationProcessorPaths>
+          <compilerArgs combine.children="append">
+            <!-- If using JDK 8, use only the two arguments immediately below. -->
+            <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
+            <!--            <arg>-Awarns</arg>-->
+          </compilerArgs>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <!-- This plugin will set properties values using dependency information -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
        <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>

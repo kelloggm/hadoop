@@ -423,7 +423,7 @@ public class FsDatasetCache {
         }
         reservedBytes = true;
         try {
-          blockIn = (FileInputStream)dataset.getBlockInputStream(extBlk, 0);
+          blockIn = (FileInputStream) dataset.getBlockInputStream(extBlk, 0);
           metaIn = DatanodeUtil.getMetaDataInputStream(extBlk, dataset);
         } catch (ClassCastException e) {
           LOG.warn("Failed to cache " + key +

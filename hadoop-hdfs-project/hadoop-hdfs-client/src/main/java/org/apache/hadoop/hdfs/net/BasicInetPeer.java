@@ -25,6 +25,7 @@ import java.net.SocketAddress;
 import java.nio.channels.ReadableByteChannel;
 
 import org.apache.hadoop.net.unix.DomainSocket;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * Represents a peer that we communicate with by using a basic Socket
@@ -37,7 +38,7 @@ public class BasicInetPeer implements Peer {
   private final InputStream in;
   private final boolean isLocal;
 
-  public BasicInetPeer(Socket socket) throws IOException {
+  public BasicInetPeer(@Owning Socket socket) throws IOException {
     this.socket = socket;
     this.out = socket.getOutputStream();
     this.in = socket.getInputStream();

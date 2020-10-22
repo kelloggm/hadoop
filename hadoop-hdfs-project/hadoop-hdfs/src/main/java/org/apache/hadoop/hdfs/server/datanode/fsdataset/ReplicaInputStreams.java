@@ -27,6 +27,8 @@ import org.apache.hadoop.hdfs.server.datanode.DataNode;
 import org.apache.hadoop.hdfs.server.datanode.FileIoProvider;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.nativeio.NativeIOException;
+import org.checkerframework.checker.objectconstruction.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.slf4j.Logger;
 
 /**
@@ -63,7 +65,7 @@ public class ReplicaInputStreams implements Closeable {
   }
 
   /** @return the data input stream. */
-  public InputStream getDataIn() {
+  @NotOwning public InputStream getDataIn() {
     return dataIn;
   }
 
