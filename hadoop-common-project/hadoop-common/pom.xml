@@ -435,6 +435,7 @@
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
             <arg>-Awarns</arg>
             <arg>-AskipDefs=MapFile|SequenceFile</arg>
+            <arg>-AdisableReturnsReceiver</arg>
           </compilerArgs>
         </configuration>
       </plugin>
