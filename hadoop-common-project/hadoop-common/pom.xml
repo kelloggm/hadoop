@@ -375,6 +375,11 @@
       <version>0.1.10-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>net.sridharan.objectconstruction</groupId>
+      <artifactId>must-call-qual</artifactId>
+      <version>0.1.10-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotations</artifactId>
       <version>2.0.12</version>
@@ -433,9 +438,10 @@
           <compilerArgs combine.children="append">
             <!-- If using JDK 8, use only the two arguments immediately below. -->
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
-            <arg>-Awarns</arg>
+<!--            <arg>-Awarns</arg>-->
             <arg>-AskipDefs=MapFile|SequenceFile</arg>
             <arg>-AdisableReturnsReceiver</arg>
+            <arg>-AcheckMustCall</arg>
           </compilerArgs>
         </configuration>
       </plugin>

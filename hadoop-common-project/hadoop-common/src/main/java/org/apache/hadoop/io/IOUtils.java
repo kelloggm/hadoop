@@ -39,6 +39,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.util.Shell;
 import org.checkerframework.checker.objectconstruction.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.EnsuresCalledMethodsVarArgs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -252,6 +253,8 @@ public class IOUtils {
    * instead
    */
   @Deprecated
+  @SuppressWarnings("ensuresvarargs.unverified")
+  @EnsuresCalledMethodsVarArgs("close")
   public static void cleanup(Log log, java.io.Closeable... closeables) {
     for (java.io.Closeable c : closeables) {
       if (c != null) {
@@ -273,6 +276,8 @@ public class IOUtils {
    * @param logger the log to record problems to at debug level. Can be null.
    * @param closeables the objects to close
    */
+  @SuppressWarnings("ensuresvarargs.unverified")
+  @EnsuresCalledMethodsVarArgs("close")
   public static void cleanupWithLogger(Logger logger,
       java.io.Closeable... closeables) {
     for (java.io.Closeable c : closeables) {
@@ -307,6 +312,8 @@ public class IOUtils {
    *
    * @param streams the Streams to close
    */
+  @SuppressWarnings("ensuresvarargs.unverified")
+  @EnsuresCalledMethodsVarArgs("close")
   public static void closeStreams(java.io.Closeable... streams) {
     if (streams != null) {
       cleanupWithLogger(null, streams);
