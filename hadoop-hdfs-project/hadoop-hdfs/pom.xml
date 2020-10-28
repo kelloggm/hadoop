@@ -267,8 +267,9 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
           <compilerArgs combine.children="append">
             <!-- If using JDK 8, use only the two arguments immediately below. -->
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
-<!--            <arg>-Awarns</arg>-->
+            <arg>-Awarns</arg>
             <arg>-AdisableReturnsReceiver</arg>
+            <arg>-AcheckMustCall</arg>
           </compilerArgs>
         </configuration>
       </plugin>
