@@ -56,6 +56,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.util.Daemon;
 import org.apache.hadoop.util.StringUtils;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -682,7 +683,7 @@ public class DFSUtilClient {
     return new ReconfigurationProtocolTranslatorPB(addr, ticket, conf, factory);
   }
 
-  public static Peer peerFromSocket(Socket socket)
+  public static Peer peerFromSocket(@Owning Socket socket)
       throws IOException {
     Peer peer;
     boolean success = false;
@@ -718,7 +719,7 @@ public class DFSUtilClient {
   }
 
   public static Peer peerFromSocketAndKey(
-        SaslDataTransferClient saslClient, Socket s,
+        SaslDataTransferClient saslClient, @Owning Socket s,
         DataEncryptionKeyFactory keyFactory,
         Token<BlockTokenIdentifier> blockToken, DatanodeID datanodeId,
         int socketTimeoutMs) throws IOException {

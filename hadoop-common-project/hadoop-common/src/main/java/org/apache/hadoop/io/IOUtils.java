@@ -38,6 +38,7 @@ import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.util.Shell;
+import org.checkerframework.checker.objectconstruction.qual.EnsuresCalledMethods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -293,6 +294,7 @@ public class IOUtils {
    *
    * @param stream the Stream to close
    */
+  @EnsuresCalledMethods(value = "#1", methods = "close")
   public static void closeStream(java.io.Closeable stream) {
     if (stream != null) {
       cleanupWithLogger(null, stream);
@@ -316,6 +318,7 @@ public class IOUtils {
    *
    * @param sock the Socket to close
    */
+  @EnsuresCalledMethods(value = "#1", methods = "close")
   public static void closeSocket(Socket sock) {
     if (sock != null) {
       try {
