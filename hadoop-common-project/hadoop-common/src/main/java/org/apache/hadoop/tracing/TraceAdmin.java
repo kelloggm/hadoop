@@ -35,6 +35,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.tools.TableListing;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Tool;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,7 @@ import org.slf4j.LoggerFactory;
 @InterfaceAudience.Private
 public class TraceAdmin extends Configured implements Tool {
   private TraceAdminProtocolPB proxy;
-  private TraceAdminProtocolTranslatorPB remote;
+  private @Owning TraceAdminProtocolTranslatorPB remote;
   private static final Logger LOG = LoggerFactory.getLogger(TraceAdmin.class);
 
   private void usage() {

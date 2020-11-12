@@ -28,6 +28,10 @@ import org.apache.hadoop.hdfs.server.datanode.FileIoProvider;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.nativeio.NativeIOException;
 import org.apache.hadoop.util.DataChecksum;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.PolyMustCall;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 
 /**
@@ -38,9 +42,9 @@ public class ReplicaOutputStreams implements Closeable {
 
   private FileDescriptor outFd = null;
   /** Stream to block. */
-  private OutputStream dataOut;
+  private @Owning OutputStream dataOut;
   /** Stream to checksum. */
-  private final OutputStream checksumOut;
+  private final @Owning OutputStream checksumOut;
   private final DataChecksum checksum;
   private final FsVolumeSpi volume;
   private final FileIoProvider fileIoProvider;
@@ -49,9 +53,8 @@ public class ReplicaOutputStreams implements Closeable {
    * Create an object with a data output stream, a checksum output stream
    * and a checksum.
    */
-  public ReplicaOutputStreams(
-      OutputStream dataOut, OutputStream checksumOut, DataChecksum checksum,
-      FsVolumeSpi volume, FileIoProvider fileIoProvider) {
+  public ReplicaOutputStreams(@PolyMustCall @Owning OutputStream dataOut, @PolyMustCall @Owning OutputStream checksumOut, DataChecksum checksum,
+                              FsVolumeSpi volume, FileIoProvider fileIoProvider) {
 
     this.dataOut = dataOut;
     this.checksum = checksum;
@@ -82,7 +85,7 @@ public class ReplicaOutputStreams implements Closeable {
   }
 
   /** @return the checksum output stream. */
-  public OutputStream getChecksumOut() {
+  @NotOwning public OutputStream getChecksumOut() {
     return checksumOut;
   }
 
@@ -97,11 +100,13 @@ public class ReplicaOutputStreams implements Closeable {
   }
 
   @Override
+  @EnsuresCalledMethods(value = {"this.checksumOut", "this.dataOut"}, methods = {"close"})
   public void close() {
     IOUtils.closeStream(dataOut);
     IOUtils.closeStream(checksumOut);
   }
 
+  @EnsuresCalledMethods(value = {"this.dataOut"}, methods = {"close"})
   public void closeDataStream() throws IOException {
     dataOut.close();
     dataOut = null;

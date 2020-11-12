@@ -23,6 +23,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.LastHttpContent;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.apache.hadoop.hdfs.DFSClient;
 import org.apache.hadoop.io.IOUtils;
@@ -33,13 +36,14 @@ import java.io.OutputStream;
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaders.Values.CLOSE;
 
+@MustCall("releaseDfsResources")
 class HdfsWriter extends SimpleChannelInboundHandler<HttpContent> {
-  private final DFSClient client;
-  private final OutputStream out;
+  private final @Owning DFSClient client;
+  private final @Owning OutputStream out;
   private final DefaultHttpResponse response;
   private static final Logger LOG = WebHdfsHandler.LOG;
 
-  HdfsWriter(DFSClient client, OutputStream out, DefaultHttpResponse response) {
+  HdfsWriter(@Owning DFSClient client, @Owning OutputStream out, DefaultHttpResponse response) {
     this.client = client;
     this.out = out;
     this.response = response;
@@ -81,11 +85,13 @@ class HdfsWriter extends SimpleChannelInboundHandler<HttpContent> {
     }
   }
 
+  @EnsuresCalledMethods(value = {"this.out", "this.client"}, methods = {"close"})
   private void releaseDfsResources() {
     IOUtils.cleanupWithLogger(LOG, out);
     IOUtils.cleanupWithLogger(LOG, client);
   }
 
+  @EnsuresCalledMethods(value = {"this.out", "this.client"}, methods = {"close"})
   private void releaseDfsResourcesAndThrow() throws Exception {
     out.close();
     client.close();

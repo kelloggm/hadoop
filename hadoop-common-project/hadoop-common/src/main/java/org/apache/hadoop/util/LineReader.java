@@ -26,6 +26,7 @@ import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_SIZE_KEY;
 
@@ -45,7 +46,7 @@ import static org.apache.hadoop.fs.CommonConfigurationKeysPublic.IO_FILE_BUFFER_
 public class LineReader implements Closeable {
   private static final int DEFAULT_BUFFER_SIZE = 64 * 1024;
   private int bufferSize = DEFAULT_BUFFER_SIZE;
-  private InputStream in;
+  private @Owning InputStream in;
   private byte[] buffer;
   // the number of bytes of real data in the buffer
   private int bufferLength = 0;
@@ -73,7 +74,7 @@ public class LineReader implements Closeable {
    * @param in The input stream
    * @param bufferSize Size of the read buffer
    */
-  public LineReader(InputStream in, int bufferSize) {
+  public LineReader(@Owning InputStream in, int bufferSize) {
     this.in = in;
     this.bufferSize = bufferSize;
     this.buffer = new byte[this.bufferSize];

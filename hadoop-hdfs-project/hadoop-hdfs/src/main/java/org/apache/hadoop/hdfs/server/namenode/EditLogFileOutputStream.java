@@ -26,6 +26,8 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience;
@@ -48,7 +50,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
 
   private File file;
   private FileOutputStream fp; // file stream for storing edit logs
-  private FileChannel fc; // channel of the file stream for sync
+  private @Owning FileChannel fc; // channel of the file stream for sync
   private EditsDoubleBuffer doubleBuf;
   static final ByteBuffer fill = ByteBuffer.allocateDirect(MIN_PREALLOCATION_LENGTH);
   private boolean shouldSyncWritesAndSkipFsync = false;
@@ -140,6 +142,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
   }
 
   @Override
+  @EnsuresCalledMethods(value = {"this.fc", "this.fp"}, methods = {"close"})
   public void close() throws IOException {
     if (fp == null) {
       throw new IOException("Trying to use aborted output stream");

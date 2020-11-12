@@ -31,6 +31,8 @@ import javax.security.sasl.SaslServer;
 
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * A SaslOutputStream is composed of an OutputStream and a SaslServer (or
@@ -42,7 +44,7 @@ import org.apache.hadoop.classification.InterfaceStability;
 @InterfaceStability.Evolving
 public class SaslOutputStream extends OutputStream {
 
-  private final OutputStream outStream;
+  private final @Owning OutputStream outStream;
   // processed data ready to be written out
   private byte[] saslToken;
 
@@ -211,6 +213,7 @@ public class SaslOutputStream extends OutputStream {
    *              if an I/O error occurs.
    */
   @Override
+  @EnsuresCalledMethods(value = {"this.outStream"}, methods = {"close"})
   public void close() throws IOException {
     disposeSasl();
     outStream.close();

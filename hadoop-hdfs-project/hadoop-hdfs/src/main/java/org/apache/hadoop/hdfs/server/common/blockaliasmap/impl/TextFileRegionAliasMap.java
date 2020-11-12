@@ -51,6 +51,9 @@ import org.apache.hadoop.hdfs.server.common.blockaliasmap.BlockAliasMap;
 import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.PolyMustCall;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -433,9 +436,9 @@ public class TextFileRegionAliasMap
     }
 
     private final String delim;
-    private final java.io.Writer out;
+    private final @Owning java.io.Writer out;
 
-    public TextWriter(java.io.Writer out, String delim) {
+    public TextWriter(@Owning java.io.Writer out, String delim) {
       this.out = out;
       this.delim = delim;
     }
@@ -458,6 +461,7 @@ public class TextFileRegionAliasMap
     }
 
     @Override
+    @EnsuresCalledMethods(value = {"this.out"}, methods = {"close"})
     public void close() throws IOException {
       out.close();
     }

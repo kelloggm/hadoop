@@ -266,7 +266,8 @@ public class ShortCircuitRegistry {
 
   public static class NewShmInfo implements Closeable {
     private final ShmId shmId;
-    private final FileInputStream stream;
+    private final FileInputStream
+            stream;
 
     NewShmInfo(ShmId shmId, FileInputStream stream) {
       this.shmId = shmId;

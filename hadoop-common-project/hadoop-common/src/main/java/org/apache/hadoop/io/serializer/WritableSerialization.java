@@ -29,6 +29,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.util.ReflectionUtils;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * A {@link Serialization} for {@link Writable}s that delegates to
@@ -39,11 +42,12 @@ import org.apache.hadoop.util.ReflectionUtils;
 @InterfaceStability.Evolving
 public class WritableSerialization extends Configured
 	implements Serialization<Writable> {
+  @MustCall("close")
   static class WritableDeserializer extends Configured
   	implements Deserializer<Writable> {
 
     private Class<?> writableClass;
-    private DataInputStream dataIn;
+    private @Owning DataInputStream dataIn;
     
     public WritableDeserializer(Configuration conf, Class<?> c) {
       setConf(conf);
@@ -73,6 +77,7 @@ public class WritableSerialization extends Configured
     }
 
     @Override
+    @EnsuresCalledMethods(value = {"this.dataIn"}, methods = {"close"})
     public void close() throws IOException {
       dataIn.close();
     }
@@ -82,7 +87,7 @@ public class WritableSerialization extends Configured
   static class WritableSerializer extends Configured implements
   	Serializer<Writable> {
     
-    private DataOutputStream dataOut;
+    private @Owning DataOutputStream dataOut;
     
     @Override
     public void open(OutputStream out) {
@@ -99,6 +104,7 @@ public class WritableSerialization extends Configured
     }
 
     @Override
+    @EnsuresCalledMethods(value = {"this.dataOut"}, methods = {"close"})
     public void close() throws IOException {
       dataOut.close();
     }

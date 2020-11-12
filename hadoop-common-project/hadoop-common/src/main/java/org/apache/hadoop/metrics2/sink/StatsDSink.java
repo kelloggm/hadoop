@@ -36,6 +36,9 @@ import org.apache.hadoop.metrics2.MetricsSink;
 import org.apache.hadoop.metrics2.MetricsTag;
 import org.apache.hadoop.metrics2.impl.MsInfo;
 import org.apache.hadoop.net.NetUtils;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,9 +171,10 @@ public class StatsDSink implements MetricsSink, Closeable {
    * Class that sends UDP packets to StatsD daemon.
    *
    */
+  @MustCall("close")
   public static class StatsD {
 
-    private DatagramSocket socket = null;
+    private @Owning DatagramSocket socket = null;
     private DatagramPacket packet = null;
     private String serverHost;
     private int serverPort;
@@ -203,6 +207,7 @@ public class StatsDSink implements MetricsSink, Closeable {
       socket.send(packet);
     }
 
+    @EnsuresCalledMethods(value = {"this.socket"}, methods = {"close"})
     public void close() throws IOException {
       try {
         if (socket != null) {

@@ -32,6 +32,8 @@ import javax.security.sasl.SaslServer;
 
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +50,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
   public static final Logger LOG =
       LoggerFactory.getLogger(SaslInputStream.class);
 
-  private final DataInputStream inStream;
+  private final @Owning DataInputStream inStream;
   /** Should we wrap the communication channel? */
   private final boolean useWrap;
   
@@ -339,6 +341,7 @@ public class SaslInputStream extends InputStream implements ReadableByteChannel 
    *              if an I/O error occurs.
    */
   @Override
+  @EnsuresCalledMethods(value = {"this.inStream"}, methods = {"close"})
   public void close() throws IOException {
     disposeSasl();
     ostart = 0;

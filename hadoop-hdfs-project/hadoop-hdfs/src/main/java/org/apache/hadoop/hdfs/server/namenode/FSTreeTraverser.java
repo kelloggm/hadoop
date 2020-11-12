@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 
-/**
+/*
  * FSTreeTraverser traverse directory recursively and process files
  * in batches.
  */

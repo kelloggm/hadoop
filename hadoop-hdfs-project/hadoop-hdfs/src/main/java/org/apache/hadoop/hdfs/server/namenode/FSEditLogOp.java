@@ -133,6 +133,7 @@ import org.apache.hadoop.ipc.RpcConstants;
 import org.apache.hadoop.security.token.delegation.DelegationKey;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.StringUtils;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -4955,7 +4956,7 @@ public abstract class FSEditLogOp {
    * Class for reading editlog ops from a stream
    */
   public abstract static class Reader {
-    final DataInputStream in;
+    final @Owning DataInputStream in;
     final StreamLimiter limiter;
     final OpInstanceCache cache;
     final byte[] temp = new byte[4096];

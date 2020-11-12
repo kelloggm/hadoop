@@ -25,6 +25,9 @@ import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.fs.PositionedReadable;
 import org.apache.hadoop.fs.Seekable;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
+
 /**
  * A compression input stream.
  *
@@ -38,7 +41,7 @@ public abstract class CompressionInputStream extends InputStream implements Seek
   /**
    * The input stream to be compressed. 
    */
-  protected final InputStream in;
+  protected final @Owning InputStream in;
   protected long maxAvailableData = 0L;
 
   private Decompressor trackedDecompressor;
@@ -50,7 +53,7 @@ public abstract class CompressionInputStream extends InputStream implements Seek
    * @param in The input stream to be compressed.
    * @throws IOException
    */
-  protected CompressionInputStream(InputStream in) throws IOException {
+  protected CompressionInputStream(@Owning InputStream in) throws IOException {
     if (!(in instanceof Seekable) || !(in instanceof PositionedReadable)) {
         this.maxAvailableData = in.available();
     }
@@ -58,6 +61,7 @@ public abstract class CompressionInputStream extends InputStream implements Seek
   }
 
   @Override
+  @EnsuresCalledMethods(value = {"this.in"}, methods = {"close"})
   public void close() throws IOException {
     try {
       in.close();

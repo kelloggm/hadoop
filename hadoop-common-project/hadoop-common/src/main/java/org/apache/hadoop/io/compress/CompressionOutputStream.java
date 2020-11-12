@@ -23,6 +23,8 @@ import java.io.OutputStream;
 
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * A compression output stream.
@@ -33,7 +35,7 @@ public abstract class CompressionOutputStream extends OutputStream {
   /**
    * The output stream to be compressed. 
    */
-  protected final OutputStream out;
+  protected final @Owning OutputStream out;
 
   /**
    * If non-null, this is the Compressor object that we should call
@@ -55,6 +57,7 @@ public abstract class CompressionOutputStream extends OutputStream {
   }
 
   @Override
+  @EnsuresCalledMethods(value = {"this.out"}, methods = {"close"})
   public void close() throws IOException {
     try {
       finish();

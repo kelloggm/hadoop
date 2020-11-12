@@ -53,6 +53,7 @@ import org.apache.hadoop.metrics2.MetricsSink;
 import org.apache.hadoop.metrics2.MetricsTag;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * <p>This class is a metrics sink that uses

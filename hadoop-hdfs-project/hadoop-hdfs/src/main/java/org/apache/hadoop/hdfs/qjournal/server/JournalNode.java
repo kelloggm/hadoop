@@ -21,6 +21,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience;
@@ -67,6 +70,7 @@ import java.util.Map;
  * in the quorum protocol.
  */
 @InterfaceAudience.Private
+@MustCall("stop")
 public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   public static final Logger LOG = LoggerFactory.getLogger(JournalNode.class);
   private Configuration conf;
@@ -78,7 +82,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   private ObjectName journalNodeInfoBeanName;
   private String httpServerURI;
   private final ArrayList<File> localDir = Lists.newArrayList();
-  Tracer tracer;
+  @Owning Tracer tracer;
 
   static {
     HdfsConfiguration.init();
@@ -89,7 +93,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
    */
   private int resultCode = 0;
 
-  synchronized Journal getOrCreateJournal(String jid,
+  @NotOwning synchronized Journal getOrCreateJournal(String jid,
                                           String nameServiceId,
                                           StartupOption startOpt)
       throws IOException {
@@ -137,11 +141,11 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   }
 
   @VisibleForTesting
-  public Journal getOrCreateJournal(String jid) throws IOException {
+  @NotOwning public Journal getOrCreateJournal(String jid) throws IOException {
     return getOrCreateJournal(jid, null, StartupOption.REGULAR);
   }
 
-  public Journal getOrCreateJournal(String jid,
+  @NotOwning public Journal getOrCreateJournal(String jid,
                                     String nameServiceId)
       throws IOException {
     return getOrCreateJournal(jid, nameServiceId, StartupOption.REGULAR);

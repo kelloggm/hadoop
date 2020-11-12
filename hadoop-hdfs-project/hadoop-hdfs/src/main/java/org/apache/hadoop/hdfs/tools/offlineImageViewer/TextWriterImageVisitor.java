@@ -23,6 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import com.google.common.base.Charsets;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * TextWriterImageProcessor mixes in the ability for ImageVisitor
@@ -35,10 +38,11 @@ import com.google.common.base.Charsets;
  * Note, this class does not add newlines to text written to file or (if
  * enabled) screen.  This is the implementing class' responsibility.
  */
+@MustCall("close")
 abstract class TextWriterImageVisitor extends ImageVisitor {
   private boolean printToScreen = false;
   private boolean okToWrite = false;
-  final private OutputStreamWriter fw;
+  final private @Owning OutputStreamWriter fw;
 
   /**
    * Create a processor that writes to the file named.
@@ -84,6 +88,8 @@ abstract class TextWriterImageVisitor extends ImageVisitor {
   /**
    * Close output stream and prevent further writing
    */
+
+  @EnsuresCalledMethods(value = {"this.fw"}, methods = {"close"})
   private void close() throws IOException {
     fw.close();
     okToWrite = false;

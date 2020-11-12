@@ -55,6 +55,7 @@ import org.apache.hadoop.util.Time;
 import org.apache.hadoop.util.concurrent.AsyncGet;
 import org.apache.htrace.core.Span;
 import org.apache.htrace.core.Tracer;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1847,8 +1848,8 @@ public class Client implements AutoCloseable {
    */
   @InterfaceAudience.Private
   public static class IpcStreams implements Closeable, Flushable {
-    private DataInputStream in;
-    public DataOutputStream out;
+    private @Owning DataInputStream in;
+    public @Owning DataOutputStream out;
     private int maxResponseLength;
     private boolean firstResponse = true;
 
@@ -1885,7 +1886,8 @@ public class Client implements AutoCloseable {
         if (length == -1) {
           in.readInt(); // ignore fatal/error status, it's fatal for us.
           throw new RemoteException(WritableUtils.readString(in),
-                                    WritableUtils.readString(in));
+                                    WritableUtils.readString
+                                            (in));
         }
       }
       if (length <= 0) {

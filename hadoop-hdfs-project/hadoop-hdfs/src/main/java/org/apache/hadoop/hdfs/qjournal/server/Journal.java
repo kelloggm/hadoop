@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.Range;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -130,13 +132,13 @@ public class Journal implements Closeable {
    * during the recovery procedures, and as a visibility mark
    * for clients reading in-progress logs.
    */
-  private BestEffortLongFile committedTxnId;
+  private @Owning BestEffortLongFile committedTxnId;
   
   public static final String LAST_PROMISED_FILENAME = "last-promised-epoch";
   public static final String LAST_WRITER_EPOCH = "last-writer-epoch";
   private static final String COMMITTED_TXID_FILENAME = "committed-txid";
   
-  private final FileJournalManager fjm;
+  private final @Owning FileJournalManager fjm;
 
   private JournaledEditsCache cache;
 
@@ -263,6 +265,7 @@ public class Journal implements Closeable {
    * Unlock and release resources.
    */
   @Override // Closeable
+  @EnsuresCalledMethods(value = {"this.committedTxnId", "this.curSegment", "this.storage" }, methods = {"close"})
   public void close() throws IOException {
     storage.close();
     IOUtils.closeStream(committedTxnId);

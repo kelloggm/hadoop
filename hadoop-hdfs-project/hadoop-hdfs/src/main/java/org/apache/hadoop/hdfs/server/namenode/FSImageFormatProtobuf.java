@@ -545,8 +545,7 @@ public final class FSImageFormatProtobuf {
         Step currentStep) throws IOException {
       CacheManagerSection s = CacheManagerSection.parseDelimitedFrom(in);
       int numPools = s.getNumPools();
-      ArrayList<CachePoolInfoProto> pools = Lists
-          .newArrayListWithCapacity(numPools);
+      ArrayList<CachePoolInfoProto> pools = Lists.newArrayListWithCapacity(numPools);
       ArrayList<CacheDirectiveInfoProto> directives = Lists
           .newArrayListWithCapacity(s.getNumDirectives());
       prog.setTotal(Phase.LOADING_FSIMAGE, currentStep, numPools);

@@ -69,7 +69,8 @@ public class OfflineEditsVisitorFactory {
         throw new IOException("Unknown processor " + processor +
           " (valid processors: xml, binary, stats)");
       }
-      out = fout = null;
+
+
       return vis;
     } finally {
       IOUtils.closeStream(fout);

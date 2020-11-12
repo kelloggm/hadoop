@@ -31,6 +31,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -238,7 +239,7 @@ public final class DelegatingSSLSocketFactory extends SSLSocketFactory {
   }
 
   @Override
-  public Socket createSocket(Socket s, String host, int port,
+  public Socket createSocket(@Owning Socket s, String host, int port,
                              boolean autoClose) throws IOException {
     SSLSocketFactory factory = ctx.getSocketFactory();
 
@@ -278,7 +279,7 @@ public final class DelegatingSSLSocketFactory extends SSLSocketFactory {
     return configureSocket(factory.createSocket(host, port));
   }
 
-  private Socket configureSocket(Socket socket) {
+  private Socket configureSocket(@Owning Socket socket) {
     ((SSLSocket) socket).setEnabledCipherSuites(ciphers);
     return socket;
   }

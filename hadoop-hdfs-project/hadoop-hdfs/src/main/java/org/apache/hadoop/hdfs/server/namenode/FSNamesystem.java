@@ -4538,8 +4538,7 @@ public class FSNamesystem implements Namesystem, FSNamesystemMBean,
     }
   }
 
-  @NotOwning
-  public FSImage getFSImage() {
+  @NotOwning public FSImage getFSImage() {
     return fsImage;
   }
 

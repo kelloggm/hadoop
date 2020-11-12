@@ -213,6 +213,7 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.util.ChunkedArrayList;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.LimitInputStream;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 
 /**
  * Utilities for converting protobuf classes to and from hdfs-client side

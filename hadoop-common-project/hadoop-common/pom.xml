@@ -361,7 +361,7 @@
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
-      <version>3.7.0</version>
+      <version>3.7.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.errorprone</groupId>
@@ -432,7 +432,7 @@
             <path>
               <groupId>org.checkerframework</groupId>
               <artifactId>checker</artifactId>
-              <version>3.7.0</version>
+              <version>3.7.1</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs combine.children="append">
@@ -440,7 +440,7 @@
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
             <arg>-Awarns</arg>
             <arg>-AskipDefs=MapFile|SequenceFile</arg>
-            <arg>-AdisableReturnsReceiver</arg>
+<!--            <arg>-AdisableReturnsReceiver</arg>-->
             <arg>-AcheckMustCall</arg>
           </compilerArgs>
         </configuration>

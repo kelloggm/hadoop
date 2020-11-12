@@ -18,6 +18,8 @@
 
 package org.apache.hadoop.util;
 
+import org.checkerframework.common.returnsreceiver.qual.This;
+
 import java.io.Closeable;
 import java.util.concurrent.TimeUnit;
 
@@ -55,7 +57,7 @@ public class StopWatch implements Closeable {
    * Start to measure times and make the state of stopwatch running.
    * @return this instance of StopWatch.
    */
-  public StopWatch start() {
+  public @This StopWatch start() {
     if (isStarted) {
       throw new IllegalStateException("StopWatch is already running");
     }
@@ -68,7 +70,7 @@ public class StopWatch implements Closeable {
    * Stop elapsed time and make the state of stopwatch stop.
    * @return this instance of StopWatch.
    */
-  public StopWatch stop() {
+  public @This StopWatch stop() {
     if (!isStarted) {
       throw new IllegalStateException("StopWatch is already stopped");
     }
@@ -82,7 +84,7 @@ public class StopWatch implements Closeable {
    * Reset elapsed time to zero and make the state of stopwatch stop.
    * @return this instance of StopWatch.
    */
-  public StopWatch reset() {
+  public @This StopWatch reset() {
     currentElapsedNanos = 0;
     isStarted = false;
     return this;

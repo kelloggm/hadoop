@@ -29,6 +29,7 @@ import org.apache.commons.configuration2.SubsetConfiguration;
 import org.apache.hadoop.metrics2.MetricsSink;
 import org.apache.hadoop.metrics2.util.Servers;
 import org.apache.hadoop.net.DNS;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public abstract class AbstractGangliaSink implements MetricsSink {
   public static final String EQUAL = "=";
 
   private String hostName = "UNKNOWN.example.com";
-  private DatagramSocket datagramSocket;
+  private @Owning DatagramSocket datagramSocket;
   private List<? extends SocketAddress> metricsServers;
   private boolean multicastEnabled;
   private int multicastTtl;
