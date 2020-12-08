@@ -91,7 +91,8 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
       rp = new RandomAccessFile(name, "rw");
     }
     fp = new FileOutputStream(rp.getFD()); // open for append
-    fc = rp.getChannel();
+
+     rp.getChannel();
     fc.position(fc.size());
   }
 

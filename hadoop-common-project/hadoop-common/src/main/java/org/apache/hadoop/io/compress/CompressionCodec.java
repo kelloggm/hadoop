@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
 
 /**
  * This class encapsulates a streaming compression/decompression pair.
@@ -41,7 +42,7 @@ public interface CompressionCodec {
    * @return a stream the user can write uncompressed data to have it compressed
    * @throws IOException
    */
-  CompressionOutputStream createOutputStream(OutputStream out) 
+  @MustCallChoice CompressionOutputStream createOutputStream(@MustCallChoice OutputStream out)
   throws IOException;
   
   /**
@@ -53,7 +54,7 @@ public interface CompressionCodec {
    * @return a stream the user can write uncompressed data to have it compressed
    * @throws IOException
    */
-  CompressionOutputStream createOutputStream(OutputStream out, 
+  @MustCallChoice CompressionOutputStream createOutputStream(@MustCallChoice OutputStream out,
                                              Compressor compressor) 
   throws IOException;
 
@@ -79,7 +80,7 @@ public interface CompressionCodec {
    * @return a stream to read uncompressed bytes from
    * @throws IOException
    */
-  CompressionInputStream createInputStream(InputStream in) throws IOException;
+  @MustCallChoice CompressionInputStream createInputStream(@MustCallChoice InputStream in) throws IOException;
   
   /**
    * Create a {@link CompressionInputStream} that will read from the given 
@@ -90,7 +91,7 @@ public interface CompressionCodec {
    * @return a stream to read uncompressed bytes from
    * @throws IOException
    */
-  CompressionInputStream createInputStream(InputStream in, 
+  @MustCallChoice CompressionInputStream createInputStream(@MustCallChoice InputStream in,
                                            Decompressor decompressor) 
   throws IOException;
 
@@ -125,8 +126,8 @@ public interface CompressionCodec {
      * @return            The new output stream
      * @throws IOException
      */
-    static CompressionOutputStream createOutputStreamWithCodecPool(
-        CompressionCodec codec, Configuration conf, OutputStream out)
+    static @MustCallChoice CompressionOutputStream createOutputStreamWithCodecPool(
+        CompressionCodec codec, Configuration conf, @MustCallChoice OutputStream out)
         throws IOException {
       Compressor compressor = CodecPool.getCompressor(codec, conf);
       CompressionOutputStream stream = null;
@@ -151,8 +152,8 @@ public interface CompressionCodec {
      * @return            The new input stream
      * @throws IOException
      */
-    static CompressionInputStream createInputStreamWithCodecPool(
-        CompressionCodec codec,  Configuration conf, InputStream in)
+    static @MustCallChoice CompressionInputStream createInputStreamWithCodecPool(
+        CompressionCodec codec,  Configuration conf, @MustCallChoice InputStream in)
           throws IOException {
       Decompressor decompressor = CodecPool.getDecompressor(codec);
       CompressionInputStream stream = null;

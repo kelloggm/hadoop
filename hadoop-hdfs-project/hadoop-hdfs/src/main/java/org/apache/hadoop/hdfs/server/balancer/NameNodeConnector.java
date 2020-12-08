@@ -33,6 +33,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.RateLimiter;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience;
@@ -114,12 +116,12 @@ public class NameNodeConnector implements Closeable {
   private final String blockpoolID;
 
   private final BalancerProtocols namenode;
-  private final KeyManager keyManager;
+  private final @Owning KeyManager keyManager;
   final AtomicBoolean fallbackToSimpleAuth = new AtomicBoolean(false);
 
-  private final DistributedFileSystem fs;
+  private final @Owning DistributedFileSystem fs;
   private final Path idPath;
-  private OutputStream out;
+  private @Owning OutputStream out;
   private final List<Path> targetPaths;
   private final AtomicLong bytesMoved = new AtomicLong();
 
@@ -299,6 +301,7 @@ public class NameNodeConnector implements Closeable {
   }
 
   @Override
+  @EnsuresCalledMethods(value = {"this.keyManager", "this.out"}, methods = {"close"})
   public void close() {
     keyManager.close();
 

@@ -26,6 +26,7 @@ import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.server.datanode.BlockMetadataHeader;
 import org.apache.hadoop.hdfs.server.datanode.DNConf;
 import org.apache.hadoop.util.DataChecksum;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -128,10 +129,11 @@ public abstract class MappableBlockLoader {
   /**
    * Verifies the block's checksum. This is an I/O intensive operation.
    */
-  protected void verifyChecksum(long length, FileInputStream metaIn,
+  protected void verifyChecksum(long length, @Owning FileInputStream metaIn,
       FileChannel blockChannel, String blockFileName) throws IOException {
     // Verify the checksum from the block's meta file
-    // Get the DataChecksum from the meta file header
+    // Get the DataChecksum from the
+    // meta file header
     BlockMetadataHeader header =
         BlockMetadataHeader.readHeader(new DataInputStream(
             new BufferedInputStream(metaIn, BlockMetadataHeader

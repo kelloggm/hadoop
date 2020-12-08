@@ -49,13 +49,14 @@ import org.apache.hadoop.hdfs.shortcircuit.ShortCircuitShm.SlotId;
 import org.apache.htrace.core.SpanId;
 import org.apache.htrace.core.TraceScope;
 import org.apache.htrace.core.Tracer;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /** Receiver */
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public abstract class Receiver implements DataTransferProtocol {
   private final Tracer tracer;
-  protected DataInputStream in;
+  protected @Owning DataInputStream in;
 
   protected Receiver(Tracer tracer) {
     this.tracer = tracer;

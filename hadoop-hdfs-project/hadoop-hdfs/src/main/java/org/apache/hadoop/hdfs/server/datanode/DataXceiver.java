@@ -803,6 +803,7 @@ class DataXceiver extends Receiver implements Runnable {
 
           OutputStream unbufMirrorOut = NetUtils.getOutputStream(mirrorSock,
               writeTimeout);
+
           InputStream unbufMirrorIn = NetUtils.getInputStream(mirrorSock);
           DataEncryptionKeyFactory keyFactory =
             datanode.getDataEncryptionKeyFactoryForBlock(block);
