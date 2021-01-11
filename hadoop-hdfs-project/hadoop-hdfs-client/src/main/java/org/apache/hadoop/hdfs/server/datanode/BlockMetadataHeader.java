@@ -36,6 +36,7 @@ import org.apache.hadoop.util.DataChecksum;
 import com.google.common.annotations.VisibleForTesting;
 
 import org.apache.hadoop.util.InvalidChecksumSizeException;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,7 +161,7 @@ public class BlockMetadataHeader {
    * @return metadata header for the block
    * @throws IOException
    */
-  public static BlockMetadataHeader readHeader(
+  public static BlockMetadataHeader readHeader(@Owning
       FileInputStream fis) throws IOException {
     try (DataInputStream in = new DataInputStream(
         new BufferedInputStream(fis))) {

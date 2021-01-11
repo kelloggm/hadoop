@@ -30,6 +30,7 @@ import org.apache.hadoop.hdfs.protocol.LayoutVersion.Feature;
 import org.apache.hadoop.hdfs.server.namenode.FSImageFormatProtobuf.Loader;
 import org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary;
 import org.apache.hadoop.io.compress.CompressionCodec;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
 import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 @InterfaceAudience.Private
@@ -81,9 +82,9 @@ public final class FSImageUtil {
     return summary;
   }
 
-  public static InputStream
+  @MustCallChoice public static InputStream
   wrapInputStreamForCompression(
-      Configuration conf, String codec, InputStream in) throws IOException {
+      Configuration conf, String codec,@MustCallChoice InputStream in) throws IOException {
     if (codec.isEmpty())
       return in;
 

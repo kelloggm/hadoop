@@ -27,7 +27,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.checkerframework.checker.mustcall.qual.PolyMustCall;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
 import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1344,7 +1344,7 @@ public class FSEditLogLoader {
     private long markPos = -1;
     private long limitPos = Long.MAX_VALUE;
 
-    @PolyMustCall public PositionTrackingInputStream(@PolyMustCall @Owning InputStream is) {
+    @MustCallChoice public PositionTrackingInputStream(@MustCallChoice InputStream is) {
       super(is);
     }
 

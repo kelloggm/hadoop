@@ -33,6 +33,7 @@ import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
 
 /**
  * Simple container class that handles support for compressed fsimage files.
@@ -153,7 +154,7 @@ public class FSImageCompression {
    * @throws IOException if an IO error occurs or the compressor cannot be
    * instantiated
    */
-  DataOutputStream writeHeaderAndWrapStream(OutputStream os)
+  @MustCallChoice DataOutputStream writeHeaderAndWrapStream(@MustCallChoice OutputStream os)
   throws IOException {
     DataOutputStream dos = new DataOutputStream(os);
 

@@ -67,6 +67,7 @@ import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.StopWatch;
 import org.apache.hadoop.util.Time;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.slf4j.Logger;
 
 import java.io.BufferedInputStream;
@@ -176,7 +177,7 @@ class DataXceiver extends Receiver implements Runnable {
   /** Return the datanode object. */
   DataNode getDataNode() {return datanode;}
   
-  private OutputStream getOutputStream() {
+  @NotOwning private OutputStream getOutputStream() {
     return socketOut;
   }
 
@@ -565,7 +566,8 @@ class DataXceiver extends Receiver implements Runnable {
 
   @Override
   public void readBlock(final ExtendedBlock block,
-      final Token<BlockTokenIdentifier> blockToken,
+      final Token
+              <BlockTokenIdentifier> blockToken,
       final String clientName,
       final long blockOffset,
       final long length,
@@ -1321,7 +1323,7 @@ class DataXceiver extends Receiver implements Runnable {
    * @return
    */
   @VisibleForTesting
-  DataOutputStream getBufferedOutputStream() {
+  @NotOwning DataOutputStream getBufferedOutputStream() {
     return new DataOutputStream(
         new BufferedOutputStream(getOutputStream(), smallBufferSize));
   }

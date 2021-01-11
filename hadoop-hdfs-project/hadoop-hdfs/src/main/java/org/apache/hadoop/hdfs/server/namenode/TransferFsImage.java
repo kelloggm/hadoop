@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMap;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience;
@@ -349,13 +350,13 @@ public class TransferFsImage {
    * A server-side method to respond to a getfile http request
    * Copies the contents of the local file into the output stream.
    */
-  public static void copyFileToStream(OutputStream out, File localfile,
-      FileInputStream infile, DataTransferThrottler throttler)
+  public static void copyFileToStream(@Owning OutputStream out, File localfile,
+                                      FileInputStream infile, DataTransferThrottler throttler)
     throws IOException {
     copyFileToStream(out, localfile, infile, throttler, null);
   }
 
-  private static void copyFileToStream(OutputStream out, File localfile,
+  private static void copyFileToStream(@Owning OutputStream out, File localfile,
       FileInputStream infile, DataTransferThrottler throttler,
       Canceler canceler) throws IOException {
     byte buf[] = new byte[IO_FILE_BUFFER_SIZE];

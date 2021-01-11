@@ -24,21 +24,25 @@ import java.io.OutputStream;
 
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.IOUtils;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * A little struct class to wrap an InputStream and an OutputStream.
  */
 @InterfaceAudience.Private
 public class IOStreamPair implements Closeable {
-  public final InputStream in;
-  public final OutputStream out;
+  public final @Owning InputStream in;
+  public final @Owning OutputStream out;
 
-  public IOStreamPair(InputStream in, OutputStream out) {
+  public IOStreamPair(@Owning InputStream in,@Owning OutputStream out) {
     this.in = in;
     this.out = out;
   }
 
   @Override
+  @EnsuresCalledMethods(value = {"this.in", "this.out"}, methods = {"close"})
   public void close() throws IOException {
     IOUtils.closeStream(in);
     IOUtils.closeStream(out);

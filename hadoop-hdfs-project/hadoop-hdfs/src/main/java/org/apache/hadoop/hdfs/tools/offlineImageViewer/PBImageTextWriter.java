@@ -41,6 +41,7 @@ import org.apache.hadoop.hdfs.server.namenode.SerialNumberManager;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.util.LimitInputStream;
 import org.apache.hadoop.util.Time;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.fusesource.leveldbjni.JniDBFactory;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.Options;
@@ -560,7 +561,7 @@ abstract class PBImageTextWriter implements Closeable {
    */
   abstract protected void afterOutput() throws IOException;
 
-  public void visit(RandomAccessFile file) throws IOException {
+  public void visit(@Owning RandomAccessFile file) throws IOException {
     Configuration conf = new Configuration();
     if (!FSImageUtil.checkFileFormat(file)) {
       throw new IOException("Unrecognized FSImage");

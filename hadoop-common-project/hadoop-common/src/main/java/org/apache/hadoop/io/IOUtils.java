@@ -39,6 +39,8 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.PathIOException;
 import org.apache.hadoop.util.Shell;
 import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.InheritableMustCall;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.objectconstruction.qual.EnsuresCalledMethodsVarArgs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

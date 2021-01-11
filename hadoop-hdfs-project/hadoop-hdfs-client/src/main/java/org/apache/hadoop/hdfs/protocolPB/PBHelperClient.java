@@ -515,7 +515,7 @@ public class PBHelperClient {
     return protos;
   }
 
-  public static InputStream vintPrefixed(final InputStream input)
+  @NotOwning public static InputStream vintPrefixed(final InputStream input)
       throws IOException {
     final int firstByte = input.read();
     if (firstByte == -1) {

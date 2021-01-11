@@ -52,7 +52,6 @@ import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
 import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
-import org.checkerframework.checker.mustcall.qual.PolyMustCall;
 import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

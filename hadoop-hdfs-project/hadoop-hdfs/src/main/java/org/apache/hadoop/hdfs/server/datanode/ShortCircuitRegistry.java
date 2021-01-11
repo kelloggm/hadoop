@@ -32,6 +32,10 @@ import java.util.Set;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.IOUtils;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -266,10 +270,9 @@ public class ShortCircuitRegistry {
 
   public static class NewShmInfo implements Closeable {
     private final ShmId shmId;
-    private final FileInputStream
-            stream;
+    private final @Owning FileInputStream stream;
 
-    NewShmInfo(ShmId shmId, FileInputStream stream) {
+    @MustCallChoice NewShmInfo(ShmId shmId,@MustCallChoice FileInputStream stream) {
       this.shmId = shmId;
       this.stream = stream;
     }
@@ -278,11 +281,12 @@ public class ShortCircuitRegistry {
       return shmId;
     }
 
-    public FileInputStream getFileStream() {
+    @NotOwning public FileInputStream getFileStream() {
       return stream;
     }
 
     @Override
+    @EnsuresCalledMethods(value = {"this.stream"}, methods = {"close"})
     public void close() throws IOException {
       stream.close();
     }

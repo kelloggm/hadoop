@@ -29,7 +29,7 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.nativeio.NativeIOException;
 import org.apache.hadoop.util.DataChecksum;
 import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
-import org.checkerframework.checker.mustcall.qual.PolyMustCall;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
 import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public class ReplicaOutputStreams implements Closeable {
    * Create an object with a data output stream, a checksum output stream
    * and a checksum.
    */
-  public ReplicaOutputStreams(@PolyMustCall @Owning OutputStream dataOut, @PolyMustCall @Owning OutputStream checksumOut, DataChecksum checksum,
+  @MustCallChoice public ReplicaOutputStreams(@Owning OutputStream dataOut, @MustCallChoice OutputStream checksumOut, DataChecksum checksum,
                               FsVolumeSpi volume, FileIoProvider fileIoProvider) {
 
     this.dataOut = dataOut;
@@ -80,7 +80,7 @@ public class ReplicaOutputStreams implements Closeable {
   }
 
   /** @return the data output stream. */
-  public OutputStream getDataOut() {
+  @NotOwning public OutputStream getDataOut() {
     return dataOut;
   }
 

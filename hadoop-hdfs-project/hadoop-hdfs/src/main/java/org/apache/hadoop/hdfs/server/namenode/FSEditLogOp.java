@@ -4956,7 +4956,7 @@ public abstract class FSEditLogOp {
    * Class for reading editlog ops from a stream
    */
   public abstract static class Reader {
-    final @Owning DataInputStream in;
+    final DataInputStream in;
     final StreamLimiter limiter;
     final OpInstanceCache cache;
     final byte[] temp = new byte[4096];

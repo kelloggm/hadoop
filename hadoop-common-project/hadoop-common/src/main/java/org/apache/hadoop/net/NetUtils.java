@@ -56,6 +56,8 @@ import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.util.ReflectionUtils;
 
 import com.google.common.base.Preconditions;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -388,7 +390,7 @@ public class NetUtils {
    * 
    * @see #getInputStream(Socket, long)
    */
-  public static SocketInputWrapper getInputStream(Socket socket) 
+  @NotOwning public static SocketInputWrapper getInputStream(Socket socket)
                                            throws IOException {
     return getInputStream(socket, socket.getSoTimeout());
   }
@@ -414,7 +416,7 @@ public class NetUtils {
    * @return SocketInputWrapper for reading from the socket.
    * @throws IOException
    */
-  public static SocketInputWrapper getInputStream(Socket socket, long timeout) 
+  @NotOwning public static SocketInputWrapper getInputStream(Socket socket, long timeout)
                                            throws IOException {
     InputStream stm = (socket.getChannel() == null) ? 
           socket.getInputStream() : new SocketInputStream(socket);
@@ -468,7 +470,7 @@ public class NetUtils {
    * @return OutputStream for writing to the socket.
    * @throws IOException   
    */
-  public static OutputStream getOutputStream(Socket socket, long timeout) 
+  @MustCallChoice public static OutputStream getOutputStream(@MustCallChoice Socket socket, long timeout)
                                              throws IOException {
     return (socket.getChannel() == null) ? 
             socket.getOutputStream() : new SocketOutputStream(socket, timeout);            

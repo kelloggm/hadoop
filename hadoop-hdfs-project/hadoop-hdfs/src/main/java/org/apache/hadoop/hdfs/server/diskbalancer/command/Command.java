@@ -50,6 +50,7 @@ import org.apache.hadoop.hdfs.tools.DiskBalancerCLI;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.util.HostsFileReader;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,7 +129,7 @@ public abstract class Command extends Configured implements Closeable {
    * Gets printing stream.
    * @return print stream
    */
-  PrintStream getPrintStream() {
+  @NotOwning PrintStream getPrintStream() {
     return ps;
   }
 

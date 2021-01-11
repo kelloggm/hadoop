@@ -33,6 +33,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.nativeio.NativeIO;
 import org.apache.hadoop.io.nativeio.NativeIOException;
 import org.apache.hadoop.net.SocketOutputStream;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -396,8 +397,8 @@ public class FileIoProvider {
    * @param fd  File descriptor object.
    * @return  FileOutputStream to the given file object.
    */
-  public FileOutputStream getFileOutputStream(
-      @Nullable FsVolumeSpi volume, FileDescriptor fd) {
+  @MustCallChoice public FileOutputStream getFileOutputStream(
+      @Nullable FsVolumeSpi volume, @MustCallChoice FileDescriptor fd) {
     return new WrappedFileOutputStream(volume, fd);
   }
 
@@ -903,8 +904,8 @@ public class FileIoProvider {
     /**
      * {@inheritDoc}.
      */
-    private WrappedFileOutputStream(
-        @Nullable FsVolumeSpi volume, FileDescriptor fd) {
+    @MustCallChoice private WrappedFileOutputStream(
+        @Nullable FsVolumeSpi volume,@MustCallChoice FileDescriptor fd) {
       super(fd);
       this.volume = volume;
     }

@@ -45,6 +45,8 @@ import org.apache.hadoop.http.HttpServer2;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.authorize.AccessControlList;
 import org.apache.hadoop.security.ssl.SSLFactory;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +91,7 @@ public class DatanodeHttpServer implements Closeable {
   private final HttpServer2 infoServer;
   private final EventLoopGroup bossGroup;
   private final EventLoopGroup workerGroup;
-  private final ServerSocketChannel externalHttpChannel;
+  @Owning private final ServerSocketChannel externalHttpChannel;
   private final ServerBootstrap httpServer;
   private final SSLFactory sslFactory;
   private final ServerBootstrap httpsServer;
@@ -100,7 +102,7 @@ public class DatanodeHttpServer implements Closeable {
 
   public DatanodeHttpServer(final Configuration conf,
         final DataNode datanode,
-        final ServerSocketChannel externalHttpChannel)
+        @Owning final ServerSocketChannel externalHttpChannel)
         throws IOException {
     this.conf = conf;
 
@@ -345,6 +347,7 @@ public class DatanodeHttpServer implements Closeable {
   }
 
   @Override
+  @EnsuresCalledMethods(value = {"this.externalHttpChannel"}, methods = {"close"})
   public void close() throws IOException {
     bossGroup.shutdownGracefully();
     workerGroup.shutdownGracefully();

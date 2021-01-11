@@ -30,6 +30,8 @@ import org.apache.hadoop.io.IOUtils;
 
 import com.google.common.io.Files;
 import com.google.common.primitives.Longs;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * Class that represents a file on disk which stores a single <code>long</code>
@@ -50,8 +52,7 @@ public class BestEffortLongFile implements Closeable {
   private final long defaultVal;
 
   private long value;
-  
-  private FileChannel ch = null;
+  @Owning private FileChannel ch = null;
   
   private final ByteBuffer buf = ByteBuffer.allocate(Long.SIZE/8);
   
@@ -109,6 +110,7 @@ public class BestEffortLongFile implements Closeable {
   }
   
   @Override
+  @EnsuresCalledMethods(value = {"this.ch"}, methods = {"close"})
   public void close() throws IOException {
     if (ch != null) {
       ch.close();

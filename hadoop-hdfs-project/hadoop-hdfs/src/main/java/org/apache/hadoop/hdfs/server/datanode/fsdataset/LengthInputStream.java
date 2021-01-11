@@ -17,7 +17,7 @@
  */
 package org.apache.hadoop.hdfs.server.datanode.fsdataset;
 
-import org.checkerframework.checker.mustcall.qual.PolyMustCall;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
 import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 import java.io.FilterInputStream;
@@ -35,8 +35,7 @@ public class LengthInputStream extends FilterInputStream {
    * @param in the underlying input stream.
    * @param length the length of the stream.
    */
-  @PolyMustCall public
-  LengthInputStream(@PolyMustCall @Owning InputStream in, long length) {
+  @MustCallChoice public LengthInputStream(@MustCallChoice InputStream in, long length) {
     super(in);
     this.length = length;
   }

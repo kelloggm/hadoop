@@ -27,8 +27,10 @@ import org.apache.hadoop.hdfs.server.datanode.DataNode;
 import org.apache.hadoop.hdfs.server.datanode.FileIoProvider;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.nativeio.NativeIOException;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
 import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.objectconstruction.qual.NotOwning;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 
 /**
@@ -37,16 +39,16 @@ import org.slf4j.Logger;
 public class ReplicaInputStreams implements Closeable {
   public static final Logger LOG = DataNode.LOG;
 
-  private InputStream dataIn;
-  private InputStream checksumIn;
+  @Owning private InputStream dataIn;
+  @Owning private InputStream checksumIn;
   private FsVolumeReference volumeRef;
   private final FileIoProvider fileIoProvider;
   private FileDescriptor dataInFd = null;
 
   /** Create an object with a data input stream and a checksum input stream. */
   public ReplicaInputStreams(
-      InputStream dataStream, InputStream checksumStream,
-      FsVolumeReference volumeRef, FileIoProvider fileIoProvider) {
+          @Owning InputStream dataStream, @Owning InputStream checksumStream,
+          FsVolumeReference volumeRef, FileIoProvider fileIoProvider) {
     this.volumeRef = volumeRef;
     this.fileIoProvider = fileIoProvider;
     this.dataIn = dataStream;
@@ -142,6 +144,7 @@ public class ReplicaInputStreams implements Closeable {
   }
 
   @Override
+  @EnsuresCalledMethods(value = {"this.dataIn", "this.checksumIn"}, methods = {"close"})
   public void close() {
     IOUtils.closeStream(dataIn);
     dataIn = null;

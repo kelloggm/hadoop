@@ -129,7 +129,7 @@ public abstract class MappableBlockLoader {
   /**
    * Verifies the block's checksum. This is an I/O intensive operation.
    */
-  protected void verifyChecksum(long length, @Owning FileInputStream metaIn,
+  protected void verifyChecksum(long length, FileInputStream metaIn,
       FileChannel blockChannel, String blockFileName) throws IOException {
     // Verify the checksum from the block's meta file
     // Get the DataChecksum from the

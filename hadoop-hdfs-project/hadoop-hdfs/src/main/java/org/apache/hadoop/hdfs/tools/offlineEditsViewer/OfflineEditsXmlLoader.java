@@ -33,6 +33,9 @@ import org.apache.hadoop.hdfs.server.namenode.FSEditLogOpCodes;
 import org.apache.hadoop.hdfs.server.namenode.FSEditLogOp.OpInstanceCache;
 import org.apache.hadoop.hdfs.tools.offlineEditsViewer.OfflineEditsViewer;
 import org.apache.hadoop.hdfs.util.XMLUtils.Stanza;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -48,11 +51,12 @@ import com.google.common.base.Charsets;
  */
 @InterfaceAudience.Private
 @InterfaceStability.Unstable
+@MustCall("loadEdits")
 class OfflineEditsXmlLoader 
     extends DefaultHandler implements OfflineEditsLoader {
   private final boolean fixTxIds;
   private final OfflineEditsVisitor visitor;
-  private final InputStreamReader fileReader;
+  private final @Owning InputStreamReader fileReader;
   private ParseState state;
   private Stanza stanza;
   private Stack<Stanza> stanzaStack;
@@ -83,6 +87,7 @@ class OfflineEditsXmlLoader
    * Loads edits file, uses visitor to process all elements
    */
   @Override
+  @EnsuresCalledMethods(value = {"this.fileReader"}, methods = {"close"})
   public void loadEdits() throws IOException {
     try {
       XMLReader xr = XMLReaderFactory.createXMLReader();
