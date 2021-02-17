@@ -265,11 +265,12 @@ public class Journal implements Closeable {
    * Unlock and release resources.
    */
   @Override // Closeable
-  @EnsuresCalledMethods(value = {"this.committedTxnId", "this.curSegment", "this.storage" }, methods = {"close"})
+  @SuppressWarnings("contracts.postcondition.not.satisfied")
+  @EnsuresCalledMethods(value = {"this.committedTxnId"}, methods = {"close"})
   public void close() throws IOException {
-    storage.close();
     IOUtils.closeStream(committedTxnId);
     IOUtils.closeStream(curSegment);
+    storage.close();
   }
   
   JNStorage getStorage() {

@@ -100,6 +100,7 @@ public class ReplicaOutputStreams implements Closeable {
   }
 
   @Override
+  @SuppressWarnings("contracts.postcondition.not.satisfied")
   @EnsuresCalledMethods(value = {"this.checksumOut", "this.dataOut"}, methods = {"close"})
   public void close() {
     IOUtils.closeStream(dataOut);

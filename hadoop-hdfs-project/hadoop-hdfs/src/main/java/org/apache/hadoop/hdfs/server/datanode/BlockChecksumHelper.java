@@ -296,6 +296,7 @@ final class BlockChecksumHelper {
     }
 
     @Override
+    @SuppressWarnings("contracts.postcondition.not.satisfied")
     @EnsuresCalledMethods(value = {"this.checksumIn", "this.metadataIn"}, methods = {"close"})
     void compute() throws IOException {
       try {

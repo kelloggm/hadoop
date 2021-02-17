@@ -121,7 +121,7 @@ public class NameNodeConnector implements Closeable {
 
   private final @Owning DistributedFileSystem fs;
   private final Path idPath;
-  private @Owning OutputStream out;
+  private final @Owning OutputStream out;
   private final List<Path> targetPaths;
   private final AtomicLong bytesMoved = new AtomicLong();
 
@@ -166,6 +166,8 @@ public class NameNodeConnector implements Closeable {
         // Exit if there is another one running.
         throw new IOException("Another " + name + " is running.");
       }
+    } else {
+      out = null;
     }
   }
 
@@ -301,6 +303,7 @@ public class NameNodeConnector implements Closeable {
   }
 
   @Override
+  @SuppressWarnings("contracts.postcondition.not.satisfied")
   @EnsuresCalledMethods(value = {"this.keyManager", "this.out"}, methods = {"close"})
   public void close() {
     keyManager.close();

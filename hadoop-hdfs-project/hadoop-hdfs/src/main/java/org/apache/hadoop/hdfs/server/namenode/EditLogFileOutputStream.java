@@ -50,7 +50,7 @@ public class EditLogFileOutputStream extends EditLogOutputStream {
 
   private File file;
   private FileOutputStream fp; // file stream for storing edit logs
-  private @Owning FileChannel fc; // channel of the file stream for sync
+  private FileChannel fc; // channel of the file stream for sync
   private EditsDoubleBuffer doubleBuf;
   static final ByteBuffer fill = ByteBuffer.allocateDirect(MIN_PREALLOCATION_LENGTH);
   private boolean shouldSyncWritesAndSkipFsync = false;

@@ -39,8 +39,8 @@ import org.slf4j.Logger;
 public class ReplicaInputStreams implements Closeable {
   public static final Logger LOG = DataNode.LOG;
 
-  @Owning private InputStream dataIn;
-  @Owning private InputStream checksumIn;
+  private @Owning InputStream dataIn;
+  private @Owning InputStream checksumIn;
   private FsVolumeReference volumeRef;
   private final FileIoProvider fileIoProvider;
   private FileDescriptor dataInFd = null;
@@ -144,6 +144,7 @@ public class ReplicaInputStreams implements Closeable {
   }
 
   @Override
+  @SuppressWarnings("contracts.postcondition.not.satisfied")
   @EnsuresCalledMethods(value = {"this.dataIn", "this.checksumIn"}, methods = {"close"})
   public void close() {
     IOUtils.closeStream(dataIn);

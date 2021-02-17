@@ -133,7 +133,7 @@ public class FSImageCompression {
    * @throws IOException If the decompressor cannot be instantiated or an IO
    * error occurs.
    */
-  DataInputStream unwrapInputStream(InputStream is) throws IOException {
+  @MustCallChoice DataInputStream unwrapInputStream(@MustCallChoice InputStream is) throws IOException {
     if (imageCodec != null) {
       return new DataInputStream(imageCodec.createInputStream(is));
     } else {

@@ -57,6 +57,7 @@ import static org.apache.hadoop.io.nativeio.NativeIO.POSIX.POSIX_FADV_SEQUENTIAL
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 
 /**
@@ -122,7 +123,7 @@ class BlockSender implements java.io.Closeable {
   private final ExtendedBlock block;
 
   /** InputStreams and file descriptors to read block/checksum. */
-  private ReplicaInputStreams ris;
+  private @Owning ReplicaInputStreams ris;
   /** updated while using transferTo() */
   private long blockInPosition = -1;
   /** Checksum utility */

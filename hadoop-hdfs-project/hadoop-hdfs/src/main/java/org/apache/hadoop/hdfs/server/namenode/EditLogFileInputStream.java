@@ -30,6 +30,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.security.PrivilegedExceptionAction;
 
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience;
@@ -69,7 +70,7 @@ public class EditLogFileInputStream extends EditLogInputStream {
   private State state = State.UNINIT;
   private int logVersion = 0;
   private FSEditLogOp.Reader reader = null;
-  private FSEditLogLoader.PositionTrackingInputStream tracker = null;
+  private @Owning FSEditLogLoader.PositionTrackingInputStream tracker = null;
   private DataInputStream dataIn = null;
   static final Logger LOG = LoggerFactory.getLogger(EditLogInputStream.class);
   

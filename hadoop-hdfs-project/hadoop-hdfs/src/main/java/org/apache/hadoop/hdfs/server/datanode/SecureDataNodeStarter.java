@@ -126,9 +126,9 @@ public class SecureDataNodeStarter implements Daemon {
     int backlogLength = conf.getInt(
         CommonConfigurationKeysPublic.IPC_SERVER_LISTEN_QUEUE_SIZE_KEY,
         CommonConfigurationKeysPublic.IPC_SERVER_LISTEN_QUEUE_SIZE_DEFAULT);
+    ServerSocket ss = (socketWriteTimeout > 0) ?
+            ServerSocketChannel.open().socket() : new ServerSocket();
 
-    ServerSocket ss = (socketWriteTimeout > 0) ? 
-        ServerSocketChannel.open().socket() : new ServerSocket();
     try {
       ss.bind(streamingAddr, backlogLength);
     } catch (BindException e) {
