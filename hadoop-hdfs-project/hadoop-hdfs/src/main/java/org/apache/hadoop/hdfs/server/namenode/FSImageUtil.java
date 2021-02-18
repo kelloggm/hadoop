@@ -17,13 +17,6 @@
  */
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.protocol.LayoutVersion.Feature;
@@ -31,7 +24,13 @@ import org.apache.hadoop.hdfs.server.namenode.FSImageFormatProtobuf.Loader;
 import org.apache.hadoop.hdfs.server.namenode.FsImageProto.FileSummary;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.checkerframework.checker.mustcall.qual.MustCallChoice;
-import org.checkerframework.checker.objectconstruction.qual.Owning;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 @InterfaceAudience.Private
 public final class FSImageUtil {
@@ -82,6 +81,7 @@ public final class FSImageUtil {
     return summary;
   }
 
+  @SuppressWarnings("mustcall")
   @MustCallChoice public static InputStream
   wrapInputStreamForCompression(
       Configuration conf, String codec,@MustCallChoice InputStream in) throws IOException {

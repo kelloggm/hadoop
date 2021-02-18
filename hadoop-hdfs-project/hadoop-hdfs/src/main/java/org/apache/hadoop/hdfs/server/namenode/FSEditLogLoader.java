@@ -1344,6 +1344,7 @@ public class FSEditLogLoader {
     private long markPos = -1;
     private long limitPos = Long.MAX_VALUE;
 
+    @SuppressWarnings("mustcall")
     @MustCallChoice public PositionTrackingInputStream(@MustCallChoice InputStream is) {
       super(is);
     }

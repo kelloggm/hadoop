@@ -155,7 +155,8 @@ public class SecureDataNodeStarter implements Daemon {
       httpChannel = ServerSocketChannel.open();
       InetSocketAddress infoSocAddr = DataNode.getInfoAddr(conf);
       try {
-        httpChannel.socket().bind(infoSocAddr);
+        ServerSocket serverSocket = httpChannel.socket();
+        serverSocket.bind(infoSocAddr);
       } catch (BindException e) {
         BindException newBe = appendMessageToBindException(e,
             infoSocAddr.toString());

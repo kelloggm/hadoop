@@ -17,15 +17,6 @@
  */
 package org.apache.hadoop.hdfs.server.namenode;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configuration;
@@ -34,6 +25,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
 import org.checkerframework.checker.mustcall.qual.MustCallChoice;
+
+import java.io.*;
 
 /**
  * Simple container class that handles support for compressed fsimage files.
@@ -133,6 +126,7 @@ public class FSImageCompression {
    * @throws IOException If the decompressor cannot be instantiated or an IO
    * error occurs.
    */
+  @SuppressWarnings("mustcall")
   @MustCallChoice DataInputStream unwrapInputStream(@MustCallChoice InputStream is) throws IOException {
     if (imageCodec != null) {
       return new DataInputStream(imageCodec.createInputStream(is));
@@ -154,6 +148,7 @@ public class FSImageCompression {
    * @throws IOException if an IO error occurs or the compressor cannot be
    * instantiated
    */
+  @SuppressWarnings("mustcall")
   @MustCallChoice DataOutputStream writeHeaderAndWrapStream(@MustCallChoice OutputStream os)
   throws IOException {
     DataOutputStream dos = new DataOutputStream(os);
