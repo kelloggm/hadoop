@@ -278,6 +278,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <arg>-AcountMustCall</arg>
             <arg>-ArequirePrefixInWarningSuppressions</arg>
             <arg>-AwarnUnneededSuppressions</arg>
+            <arg>-AnoAccumulationFrames</arg>
 <!--            <arg>-AonlyUses=^java</arg>-->
           </compilerArgs>
         </configuration>
