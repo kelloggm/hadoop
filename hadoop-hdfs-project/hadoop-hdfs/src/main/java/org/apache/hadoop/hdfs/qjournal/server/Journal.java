@@ -1110,6 +1110,7 @@ public class Journal implements Closeable {
     storage.getJournalManager().doPreUpgrade();
   }
 
+  @SuppressWarnings("objectconstruction:missing.reset.mustcall")
   public synchronized void doUpgrade(StorageInfo sInfo) throws IOException {
     long oldCTime = storage.getCTime();
     storage.cTime = sInfo.cTime;

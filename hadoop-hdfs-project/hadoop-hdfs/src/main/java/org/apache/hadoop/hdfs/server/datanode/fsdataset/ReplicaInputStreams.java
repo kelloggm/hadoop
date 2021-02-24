@@ -73,6 +73,7 @@ public class ReplicaInputStreams implements Closeable {
     return checksumIn;
   }
 
+  @SuppressWarnings("mustcall:return.type.incompatible")
   public FileDescriptor getDataInFd() {
     return dataInFd;
   }
