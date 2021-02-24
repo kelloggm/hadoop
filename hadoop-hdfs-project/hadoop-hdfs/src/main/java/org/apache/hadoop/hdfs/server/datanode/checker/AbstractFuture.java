@@ -24,7 +24,6 @@ import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.*;
-import org.checkerframework.checker.mustcall.qual.MustCall;
 
 import javax.annotation.Nullable;
 import java.security.AccessController;
@@ -814,8 +813,9 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
    * <p>
    * <p>This is approximately the inverse of {@link #getDoneValue(Object)}
    */
+  @SuppressWarnings("mustcall:assignment.type.incompatible")
   private static Object getFutureValue(ListenableFuture<?> future) {
-    @MustCall("") Object valueToSet;
+    Object valueToSet;
     if (future instanceof TrustedFuture) {
       // Break encapsulation for TrustedFuture instances since we know that
       // subclasses cannot override .get() (since it is final) and therefore
