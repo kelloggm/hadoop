@@ -497,6 +497,7 @@ public class JournalNodeSyncer {
     private final InterQJournalProtocol jnProxy;
     private URL httpServerUrl;
 
+    @SuppressWarnings("mustcal:return.type.incompatible")
     JournalNodeProxy(InetSocketAddress jnAddr) throws IOException {
       final Configuration confCopy = new Configuration(conf);
       this.jnAddr = jnAddr;

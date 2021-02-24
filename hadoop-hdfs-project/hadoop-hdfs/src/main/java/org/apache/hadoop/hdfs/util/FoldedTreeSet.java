@@ -216,6 +216,7 @@ public class FoldedTreeSet<E> implements SortedSet<E> {
       return size == 0;
     }
 
+    @SuppressWarnings("mustcall:argument.type.incompatible")
     public void clear() {
       if (leftIndex < rightIndex) {
         Arrays.fill(entries, leftIndex, rightIndex + 1, null);
@@ -1242,6 +1243,7 @@ public class FoldedTreeSet<E> implements SortedSet<E> {
    *
    * @return true if compaction completed, false if aborted
    */
+  @SuppressWarnings("mustcall:argument.type.incompatible") // FP: https://github.com/typetools/checker-framework/issues/979
   public boolean compact(long timeout) {
 
     if (!isEmpty()) {

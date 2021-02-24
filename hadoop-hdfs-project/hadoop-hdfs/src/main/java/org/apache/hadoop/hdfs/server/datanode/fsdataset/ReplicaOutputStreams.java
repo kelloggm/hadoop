@@ -38,7 +38,7 @@ public class ReplicaOutputStreams implements Closeable {
 
   private FileDescriptor outFd = null;
   /** Stream to block. */
-  private @Owning OutputStream dataOut;
+  private final @Owning OutputStream dataOut;
   /** Stream to checksum. */
   private final @Owning OutputStream checksumOut;
   private final DataChecksum checksum;
@@ -49,7 +49,7 @@ public class ReplicaOutputStreams implements Closeable {
    * Create an object with a data output stream, a checksum output stream
    * and a checksum.
    */
-  @SuppressWarnings("mustcall")
+  @SuppressWarnings({"mustcall:assignment.type.incompatible","objectconstruction:required.method.not.called"}) //FP: we should define tempvar for TypeCastNode
   @MustCallChoice public ReplicaOutputStreams(@Owning OutputStream dataOut, @MustCallChoice OutputStream checksumOut, DataChecksum checksum,
                               FsVolumeSpi volume, FileIoProvider fileIoProvider) {
 
@@ -107,7 +107,7 @@ public class ReplicaOutputStreams implements Closeable {
   @EnsuresCalledMethods(value = {"this.dataOut"}, methods = {"close"})
   public void closeDataStream() throws IOException {
     dataOut.close();
-    dataOut = null;
+//    dataOut = null;
   }
 
   /**

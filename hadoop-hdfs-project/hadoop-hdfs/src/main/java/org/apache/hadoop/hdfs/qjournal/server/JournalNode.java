@@ -21,11 +21,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.checkerframework.checker.mustcall.qual.MustCall;
-import org.checkerframework.checker.objectconstruction.qual.NotOwning;
-import org.checkerframework.checker.objectconstruction.qual.Owning;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
@@ -43,14 +38,15 @@ import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.tracing.TraceUtils;
 import org.apache.hadoop.util.DiskChecker;
-
-import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_JOURNALNODE_HTTP_BIND_HOST_KEY;
-import static org.apache.hadoop.util.ExitUtil.terminate;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.htrace.core.Tracer;
+import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.eclipse.jetty.util.ajax.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.ObjectName;
 import java.io.File;
@@ -61,6 +57,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.hadoop.hdfs.DFSConfigKeys.DFS_JOURNALNODE_HTTP_BIND_HOST_KEY;
+import static org.apache.hadoop.util.ExitUtil.terminate;
 
 /**
  * The JournalNode is a daemon which allows namenodes using
@@ -82,7 +81,7 @@ public class JournalNode implements Tool, Configurable, JournalNodeMXBean {
   private ObjectName journalNodeInfoBeanName;
   private String httpServerURI;
   private final ArrayList<File> localDir = Lists.newArrayList();
-  @Owning Tracer tracer;
+  Tracer tracer;
 
   static {
     HdfsConfiguration.init();

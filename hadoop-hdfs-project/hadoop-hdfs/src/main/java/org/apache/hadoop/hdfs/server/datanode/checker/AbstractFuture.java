@@ -23,31 +23,22 @@ package org.apache.hadoop.hdfs.server.datanode.checker;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Preconditions;
-import static com.google.common.base.Preconditions.checkNotNull;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
-import com.google.common.util.concurrent.Uninterruptibles;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import static java.util.concurrent.atomic.AtomicReferenceFieldUpdater
-    .newUpdater;
+import com.google.common.util.concurrent.*;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 
 import javax.annotation.Nullable;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+import java.util.concurrent.*;
 import java.util.concurrent.ThreadPoolExecutor.CallerRunsPolicy;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.concurrent.locks.LockSupport;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.concurrent.atomic.AtomicReferenceFieldUpdater.newUpdater;
 
 /**
  * An abstract implementation of {@link ListenableFuture}, intended for
@@ -824,7 +815,7 @@ public abstract class AbstractFuture<V> implements ListenableFuture<V> {
    * <p>This is approximately the inverse of {@link #getDoneValue(Object)}
    */
   private static Object getFutureValue(ListenableFuture<?> future) {
-    Object valueToSet;
+    @MustCall("") Object valueToSet;
     if (future instanceof TrustedFuture) {
       // Break encapsulation for TrustedFuture instances since we know that
       // subclasses cannot override .get() (since it is final) and therefore

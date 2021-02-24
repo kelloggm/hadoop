@@ -17,43 +17,33 @@
  */
 package org.apache.hadoop.hdfs.server.common;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import org.checkerframework.checker.objectconstruction.qual.Owning;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.server.namenode.ImageServlet;
 import org.apache.hadoop.hdfs.util.DataTransferThrottler;
+import org.apache.hadoop.hdfs.web.URLConnectionFactory;
 import org.apache.hadoop.io.MD5Hash;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authentication.client.AuthenticationException;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.hadoop.util.Time;
-import org.apache.hadoop.hdfs.web.URLConnectionFactory;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.*;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.util.*;
 
 
 @InterfaceAudience.Private
@@ -192,6 +182,7 @@ public final class Util {
    * Receives file at the url location from the input stream and puts them in
    * the specified destination storage location.
    */
+  @SuppressWarnings("objectconstruction:required.method.not.called") //TP: stream remains open in possible exceptional exit due to throw new IOException("No filename header provided by server");
   public static MD5Hash receiveFile(String url, List<File> localPaths,
       Storage dstStorage, boolean getChecksum, long advertisedSize,
       MD5Hash advertisedDigest, String fsImageName,@Owning InputStream stream,

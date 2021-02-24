@@ -33,6 +33,7 @@ import org.apache.hadoop.hdfs.server.namenode.ha.InMemoryAliasMapFailoverProxyPr
 import org.apache.hadoop.ipc.ProtobufHelper;
 import org.apache.hadoop.ipc.RPC;
 import org.apache.hadoop.net.NetUtils;
+import org.checkerframework.checker.mustcall.qual.InheritableMustCall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,7 @@ import static org.apache.hadoop.hdfs.protocol.proto.HdfsProtos.*;
  */
 @InterfaceAudience.Private
 @InterfaceStability.Unstable
+@InheritableMustCall({})
 public class InMemoryAliasMapProtocolClientSideTranslatorPB
     implements InMemoryAliasMapProtocol, Closeable {
 

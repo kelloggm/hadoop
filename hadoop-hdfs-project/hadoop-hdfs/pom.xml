@@ -273,9 +273,11 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
             <!-- If using JDK 8, use only the two arguments immediately below. -->
             <arg>-J-Xbootclasspath/p:${errorProneJavac}</arg>
             <arg>-Awarns</arg>
-<!--            <arg>-AdisableReturnsReceiver</arg>-->
+            <arg>-AdisableReturnsReceiver</arg>
             <arg>-AcheckMustCall</arg>
             <arg>-AcountMustCall</arg>
+            <arg>-ArequirePrefixInWarningSuppressions</arg>
+            <arg>-AwarnUnneededSuppressions</arg>
 <!--            <arg>-AonlyUses=^java</arg>-->
           </compilerArgs>
         </configuration>

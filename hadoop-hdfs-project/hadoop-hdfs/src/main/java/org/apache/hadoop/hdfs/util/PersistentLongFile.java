@@ -17,18 +17,13 @@
  */
 package org.apache.hadoop.hdfs.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.base.Charsets;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Charsets;
+import java.io.*;
 
 /**
  * Class that represents a file on disk which persistently stores
@@ -88,6 +83,7 @@ public class PersistentLongFile {
     }
   }
 
+  @SuppressWarnings("objectconstruction:required.method.not.called") //FP: for some reason we couldn't verify that cleanupWithLogger closes br
   public static long readFile(File file, long defaultVal) throws IOException {
     long val = defaultVal;
     if (file.exists()) {

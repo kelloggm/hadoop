@@ -17,21 +17,8 @@
  */
 package org.apache.hadoop.hdfs.server.datanode;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import org.apache.commons.logging.Log;
 import org.apache.hadoop.fs.ChecksumException;
 import org.apache.hadoop.hdfs.DFSUtilClient;
@@ -51,14 +38,19 @@ import org.apache.hadoop.net.SocketOutputStream;
 import org.apache.hadoop.util.AutoCloseableLock;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.htrace.core.TraceScope;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
+import org.slf4j.Logger;
+
+import java.io.*;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static org.apache.hadoop.io.nativeio.NativeIO.POSIX.POSIX_FADV_DONTNEED;
 import static org.apache.hadoop.io.nativeio.NativeIO.POSIX.POSIX_FADV_SEQUENTIAL;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import org.checkerframework.checker.objectconstruction.qual.Owning;
-import org.slf4j.Logger;
 
 /**
  * Reads a block from the disk and sends it to a recipient.
@@ -544,6 +536,7 @@ class BlockSender implements java.io.Closeable {
    * @param transferTo use transferTo to send data
    * @param throttler used for throttling data transfer bandwidth
    */
+  @SuppressWarnings("objectconstruction:required.method.not.called") //FP: ris is an owning field so we shouldn't track fileCh
   private int sendPacket(ByteBuffer pkt, int maxChunks, OutputStream out,
       boolean transferTo, DataTransferThrottler throttler) throws IOException {
     int dataLen = (int) Math.min(endOffset - offset,
@@ -760,6 +753,7 @@ class BlockSender implements java.io.Closeable {
     }
   }
 
+  @SuppressWarnings("objectconstruction:required.method.not.called") //FP: ris is an owning field so we shouldn't track fileChannel
   private long doSendBlock(DataOutputStream out, OutputStream baseStream,
         DataTransferThrottler throttler) throws IOException {
     if (out == null) {

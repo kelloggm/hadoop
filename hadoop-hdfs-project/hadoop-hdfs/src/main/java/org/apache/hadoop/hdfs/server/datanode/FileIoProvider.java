@@ -397,7 +397,6 @@ public class FileIoProvider {
    * @param fd  File descriptor object.
    * @return  FileOutputStream to the given file object.
    */
-  @SuppressWarnings("mustcall")
   @MustCallChoice public FileOutputStream getFileOutputStream(
       @Nullable FsVolumeSpi volume, @MustCallChoice FileDescriptor fd) {
     return new WrappedFileOutputStream(volume, fd);
@@ -905,7 +904,6 @@ public class FileIoProvider {
     /**
      * {@inheritDoc}.
      */
-    @SuppressWarnings("mustcall")
     @MustCallChoice private WrappedFileOutputStream(
         @Nullable FsVolumeSpi volume,@MustCallChoice FileDescriptor fd) {
       super(fd);

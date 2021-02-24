@@ -109,6 +109,7 @@ public class SecureDataNodeStarter implements Daemon {
    * the port of HTTP (not HTTPS) server.
    */
   @VisibleForTesting
+  @SuppressWarnings("objectconstruction:required.method.not.called") //TP: httpChannel possible exceptional exit due to throw new RuntimeException("Unable to bind on specified info port in secure context. Needed " + infoSocAddr.getPort() + ", got " + ss.getLocalPort()) :: TP: ss also remains open
   public static SecureResources getSecureResources(Configuration conf)
       throws Exception {
     HttpConfig.Policy policy = DFSUtil.getHttpPolicy(conf);

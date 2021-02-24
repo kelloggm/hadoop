@@ -317,6 +317,7 @@ public class InMemoryAliasMap implements InMemoryAliasMapProtocol,
    * @return a reference to the compressed aliasmap.
    * @throws IOException
    */
+  @SuppressWarnings("objectconstruction:required.method.not.called")  //TP: finish() throws IOException
   private static File getCompressedAliasMap(File aliasMapDir)
       throws IOException {
     File outCompressedFile = new File(aliasMapDir.getParent(), TAR_NAME);

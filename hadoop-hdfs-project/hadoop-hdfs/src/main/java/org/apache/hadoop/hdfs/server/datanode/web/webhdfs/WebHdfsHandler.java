@@ -189,6 +189,7 @@ public class WebHdfsHandler extends SimpleChannelInboundHandler<HttpRequest> {
     ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
   }
 
+  @SuppressWarnings("objectconstruction:required.method.not.called") //TP: out remains open in possible exceptional exit due to new URI(HDFS_URI_SCHEME, nnId, path, null, null)
   private void onCreate(ChannelHandlerContext ctx)
     throws IOException, URISyntaxException {
     writeContinueHeader(ctx);

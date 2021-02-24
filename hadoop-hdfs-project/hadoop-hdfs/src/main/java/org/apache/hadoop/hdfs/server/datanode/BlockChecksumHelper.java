@@ -166,6 +166,7 @@ final class BlockChecksumHelper {
     // client side now can specify a range of the block for checksum
     private final long requestLength;
     private final @Owning LengthInputStream metadataIn;
+    @SuppressWarnings("objectconstruction:required.method.not.called") //FP: compute() call close
     private final @Owning DataInputStream checksumIn;
     private final long visibleLength;
     private final boolean partialBlk;
@@ -296,7 +297,7 @@ final class BlockChecksumHelper {
     }
 
     @Override
-    @SuppressWarnings("contracts.postcondition.not.satisfied")
+    @SuppressWarnings("objectconstruction:contracts.postcondition.not.satisfied")
     @EnsuresCalledMethods(value = {"this.checksumIn", "this.metadataIn"}, methods = {"close"})
     void compute() throws IOException {
       try {

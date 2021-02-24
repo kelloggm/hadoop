@@ -18,21 +18,9 @@
 
 package org.apache.hadoop.hdfs.server.namenode;
 
-import org.apache.hadoop.thirdparty.protobuf.ByteString;
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.security.PrivilegedExceptionAction;
-
-import org.checkerframework.checker.objectconstruction.qual.Owning;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.LayoutFlags;
@@ -45,10 +33,16 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authentication.client.AuthenticationException;
+import org.apache.hadoop.thirdparty.protobuf.ByteString;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.security.PrivilegedExceptionAction;
 
 /**
  * An implementation of the abstract class {@link EditLogInputStream}, which
@@ -71,7 +65,7 @@ public class EditLogFileInputStream extends EditLogInputStream {
   private int logVersion = 0;
   private FSEditLogOp.Reader reader = null;
   private @Owning FSEditLogLoader.PositionTrackingInputStream tracker = null;
-  private DataInputStream dataIn = null;
+  private @Owning DataInputStream dataIn = null;
   static final Logger LOG = LoggerFactory.getLogger(EditLogInputStream.class);
   
   /**
@@ -149,6 +143,7 @@ public class EditLogFileInputStream extends EditLogInputStream {
     this.maxOpSize = DFSConfigKeys.DFS_NAMENODE_MAX_OP_SIZE_DEFAULT;
   }
 
+  @SuppressWarnings({"objectconstruction:missing.reset.mustcall", "objectconstruction:required.method.not.called"}) //TP: no null check before assigning a new value to dataIn or tracker
   private void init(boolean verifyLayoutVersion)
       throws LogHeaderCorruptException, IOException {
     Preconditions.checkState(state == State.UNINIT);

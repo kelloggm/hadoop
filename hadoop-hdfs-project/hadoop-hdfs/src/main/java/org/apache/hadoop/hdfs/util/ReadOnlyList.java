@@ -17,13 +17,9 @@
  */
 package org.apache.hadoop.hdfs.util;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 import org.apache.hadoop.classification.InterfaceAudience;
+
+import java.util.*;
 
 /**
  * A {@link ReadOnlyList} is a unmodifiable list,
@@ -140,6 +136,7 @@ public interface ReadOnlyList<E> extends Iterable<E> {
         }
 
         @Override
+        @SuppressWarnings("mustcall:assignment.type.incompatible")
         public Object[] toArray() {
           final Object[] a = new Object[size()];
           for(int i = 0; i < a.length; i++) {

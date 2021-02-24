@@ -17,21 +17,17 @@
  */
 package org.apache.hadoop.hdfs.util;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-
-import org.apache.hadoop.classification.InterfaceAudience;
-import org.apache.hadoop.io.IOUtils;
-
 import com.google.common.io.Files;
 import com.google.common.primitives.Longs;
+import org.apache.hadoop.classification.InterfaceAudience;
+import org.apache.hadoop.io.IOUtils;
 import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.ResetMustCall;
 import org.checkerframework.checker.objectconstruction.qual.Owning;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * Class that represents a file on disk which stores a single <code>long</code>
@@ -74,7 +70,9 @@ public class BestEffortLongFile implements Closeable {
     IOUtils.writeFully(ch, buf, 0);
     value = newVal;
   }
-  
+
+  @SuppressWarnings({"objectconstruction:incompatible.reset.mustcall", "objectconstruction:required.method.not.called"}) //FP: overwrite ch only if it's null
+  @ResetMustCall("this.ch")
   private void lazyOpen() throws IOException {
     if (ch != null) {
       return;

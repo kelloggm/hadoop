@@ -81,7 +81,7 @@ public final class FSImageUtil {
     return summary;
   }
 
-  @SuppressWarnings("mustcall")
+  @SuppressWarnings("objectconstruction:required.method.not.called") //TP: createCompression() throws IOException
   @MustCallChoice public static InputStream
   wrapInputStreamForCompression(
       Configuration conf, String codec,@MustCallChoice InputStream in) throws IOException {

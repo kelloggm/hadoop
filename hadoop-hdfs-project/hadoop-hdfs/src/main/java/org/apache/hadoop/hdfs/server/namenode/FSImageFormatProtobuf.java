@@ -234,6 +234,7 @@ public final class FSImageFormatProtobuf {
       }
     }
 
+    @SuppressWarnings("objectconstruction:required.method.not.called") //TP: the file is valid for raFile and then it becomes invalid https://en.wikipedia.org/wiki/Time-of-check_to_time-of-use
     void load(File file) throws IOException {
       filename = file;
       long start = Time.monotonicNow();
@@ -265,6 +266,7 @@ public final class FSImageFormatProtobuf {
      * @return An InputStream for the given section
      * @throws IOException
      */
+    @SuppressWarnings("objectconstruction:required.method.not.called") //TP: fin remains open in exceptional path
     public InputStream getInputStreamForSection(FileSummary.Section section,
                                                 String compressionCodec)
         throws IOException {

@@ -17,26 +17,11 @@
  */
 package org.apache.hadoop.hdfs;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hdfs.NameNodeProxiesClient.ProxyAndInfo;
 import org.apache.hadoop.hdfs.protocol.ClientProtocol;
-import org.apache.hadoop.hdfs.protocolPB.AliasMapProtocolPB;
-import org.apache.hadoop.hdfs.protocolPB.InMemoryAliasMapProtocolClientSideTranslatorPB;
-import org.apache.hadoop.hdfs.protocolPB.JournalProtocolPB;
-import org.apache.hadoop.hdfs.protocolPB.JournalProtocolTranslatorPB;
-import org.apache.hadoop.hdfs.protocolPB.NamenodeProtocolPB;
-import org.apache.hadoop.hdfs.protocolPB.NamenodeProtocolTranslatorPB;
+import org.apache.hadoop.hdfs.protocolPB.*;
 import org.apache.hadoop.hdfs.server.aliasmap.InMemoryAliasMapProtocol;
 import org.apache.hadoop.hdfs.server.namenode.ha.AbstractNNFailoverProxyProvider;
 import org.apache.hadoop.hdfs.server.namenode.ha.NameNodeHAProxyFactory;
@@ -47,11 +32,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.retry.RetryPolicies;
 import org.apache.hadoop.io.retry.RetryPolicy;
 import org.apache.hadoop.io.retry.RetryProxy;
-import org.apache.hadoop.ipc.AlignmentContext;
-import org.apache.hadoop.ipc.ProtobufRpcEngine2;
-import org.apache.hadoop.ipc.ProxyCombiner;
-import org.apache.hadoop.ipc.RPC;
-import org.apache.hadoop.ipc.RefreshCallQueueProtocol;
+import org.apache.hadoop.ipc.*;
 import org.apache.hadoop.ipc.protocolPB.RefreshCallQueueProtocolClientSideTranslatorPB;
 import org.apache.hadoop.ipc.protocolPB.RefreshCallQueueProtocolPB;
 import org.apache.hadoop.net.NetUtils;
@@ -66,6 +47,17 @@ import org.apache.hadoop.security.protocolPB.RefreshUserMappingsProtocolPB;
 import org.apache.hadoop.tools.GetUserMappingsProtocol;
 import org.apache.hadoop.tools.protocolPB.GetUserMappingsProtocolClientSideTranslatorPB;
 import org.apache.hadoop.tools.protocolPB.GetUserMappingsProtocolPB;
+import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Create proxy objects to communicate with a remote NN. All remote access to an
@@ -222,7 +214,7 @@ public class NameNodeProxies {
     return new InMemoryAliasMapProtocolClientSideTranslatorPB(proxy);
   }
 
-  private static JournalProtocol createNNProxyWithJournalProtocol(
+  private static @MustCall("close") JournalProtocol createNNProxyWithJournalProtocol(
       InetSocketAddress address, Configuration conf, UserGroupInformation ugi,
       AlignmentContext alignmentContext) throws IOException {
     JournalProtocolPB proxy = createNameNodeProxy(address,
@@ -230,7 +222,7 @@ public class NameNodeProxies {
     return new JournalProtocolTranslatorPB(proxy);
   }
 
-  private static RefreshAuthorizationPolicyProtocol
+  private static @MustCall("close") RefreshAuthorizationPolicyProtocol
       createNNProxyWithRefreshAuthorizationPolicyProtocol(InetSocketAddress address,
       Configuration conf, UserGroupInformation ugi,
       AlignmentContext alignmentContext) throws IOException {
@@ -239,8 +231,8 @@ public class NameNodeProxies {
         alignmentContext);
     return new RefreshAuthorizationPolicyProtocolClientSideTranslatorPB(proxy);
   }
-  
-  private static RefreshUserMappingsProtocol
+
+  private static @MustCall("close") RefreshUserMappingsProtocol
       createNNProxyWithRefreshUserMappingsProtocol(InetSocketAddress address,
       Configuration conf, UserGroupInformation ugi,
       AlignmentContext alignmentContext) throws IOException {
@@ -249,7 +241,7 @@ public class NameNodeProxies {
     return new RefreshUserMappingsProtocolClientSideTranslatorPB(proxy);
   }
 
-  private static RefreshCallQueueProtocol
+  private static @MustCall("close") RefreshCallQueueProtocol
       createNNProxyWithRefreshCallQueueProtocol(InetSocketAddress address,
       Configuration conf, UserGroupInformation ugi,
       AlignmentContext alignmentContext) throws IOException {
@@ -258,15 +250,15 @@ public class NameNodeProxies {
     return new RefreshCallQueueProtocolClientSideTranslatorPB(proxy);
   }
 
-  private static GetUserMappingsProtocol createNNProxyWithGetUserMappingsProtocol(
+  private static @MustCall("close") GetUserMappingsProtocol createNNProxyWithGetUserMappingsProtocol(
       InetSocketAddress address, Configuration conf, UserGroupInformation ugi,
       AlignmentContext alignmentContext) throws IOException {
     GetUserMappingsProtocolPB proxy = createNameNodeProxy(address, conf, ugi,
         GetUserMappingsProtocolPB.class, 0, alignmentContext);
     return new GetUserMappingsProtocolClientSideTranslatorPB(proxy);
   }
-  
-  private static NamenodeProtocol createNNProxyWithNamenodeProtocol(
+
+  private static @MustCall("close") NamenodeProtocol createNNProxyWithNamenodeProtocol(
       InetSocketAddress address, Configuration conf, UserGroupInformation ugi,
       boolean withRetries, AlignmentContext alignmentContext)
       throws IOException {

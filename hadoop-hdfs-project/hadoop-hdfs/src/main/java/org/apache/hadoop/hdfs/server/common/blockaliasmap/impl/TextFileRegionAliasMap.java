@@ -18,31 +18,14 @@
 
 package org.apache.hadoop.hdfs.server.common.blockaliasmap.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.protocol.ProvidedStorageLocation;
@@ -52,11 +35,13 @@ import org.apache.hadoop.io.MultipleIOException;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
 import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.MustCallChoice;
 import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
+import java.io.*;
+import java.util.*;
 
 /**
  * This class is used for block maps stored as text files,
@@ -143,6 +128,7 @@ public class TextFileRegionAliasMap
   }
 
   @VisibleForTesting
+  @SuppressWarnings("objectconstruction:required.method.not.called") //FP: tmp with MCC with out
   TextWriter createWriter(Path file, CompressionCodec codec, String delim,
       Configuration cfg) throws IOException {
     FileSystem fs = file.getFileSystem(cfg);
@@ -345,7 +331,7 @@ public class TextFileRegionAliasMap
         throw new UnsupportedOperationException();
       }
     }
-
+    @SuppressWarnings("objectconstruction:required.method.not.called") //FP: can't handle Map
     private FileRegion nextInternal(Iterator<FileRegion> i) throws IOException {
       BufferedReader r = iterators.get(i);
       if (null == r) {
@@ -369,6 +355,7 @@ public class TextFileRegionAliasMap
           nonce);
     }
 
+    @SuppressWarnings("objectconstruction:required.method.not.called") //TP: i remains open in possible exceptional exit due to codec.createInputStream(i)
     public InputStream createStream() throws IOException {
       InputStream i = fs.open(file);
       if (codec != null) {
@@ -378,6 +365,7 @@ public class TextFileRegionAliasMap
     }
 
     @Override
+    @SuppressWarnings("objectconstruction:required.method.not.called") //FP: ownership is transferred to map
     public Iterator<FileRegion> iterator() {
       FRIterator i = new FRIterator();
       try {
@@ -393,6 +381,7 @@ public class TextFileRegionAliasMap
     }
 
     @Override
+    @SuppressWarnings("objectconstruction:required.method.not.called") //FP: can't handle Map
     public void close() throws IOException {
       ArrayList<IOException> ex = new ArrayList<>();
       synchronized (iterators) {
@@ -437,7 +426,7 @@ public class TextFileRegionAliasMap
     private final String delim;
     private final @Owning java.io.Writer out;
 
-    public TextWriter(@Owning java.io.Writer out, String delim) {
+    @MustCallChoice public TextWriter(@MustCallChoice java.io.Writer out, String delim) {
       this.out = out;
       this.delim = delim;
     }

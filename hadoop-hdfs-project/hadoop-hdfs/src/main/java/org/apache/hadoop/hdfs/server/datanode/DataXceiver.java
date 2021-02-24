@@ -19,41 +19,23 @@ package org.apache.hadoop.hdfs.server.datanode;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import org.apache.hadoop.thirdparty.protobuf.ByteString;
-import javax.crypto.SecretKey;
 import org.apache.commons.logging.Log;
 import org.apache.hadoop.fs.StorageType;
 import org.apache.hadoop.hdfs.DFSUtilClient;
 import org.apache.hadoop.hdfs.ExtendedBlockId;
 import org.apache.hadoop.hdfs.net.Peer;
-import org.apache.hadoop.hdfs.protocol.BlockChecksumOptions;
-import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
-import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
-import org.apache.hadoop.hdfs.protocol.HdfsConstants;
-import org.apache.hadoop.hdfs.protocol.StripedBlockInfo;
-import org.apache.hadoop.hdfs.protocol.datatransfer.BlockConstructionStage;
-import org.apache.hadoop.hdfs.protocol.datatransfer.BlockPinningException;
-import org.apache.hadoop.hdfs.protocol.datatransfer.DataTransferProtoUtil;
-import org.apache.hadoop.hdfs.protocol.datatransfer.IOStreamPair;
-import org.apache.hadoop.hdfs.protocol.datatransfer.Op;
-import org.apache.hadoop.hdfs.protocol.datatransfer.Receiver;
-import org.apache.hadoop.hdfs.protocol.datatransfer.Sender;
+import org.apache.hadoop.hdfs.protocol.*;
+import org.apache.hadoop.hdfs.protocol.datatransfer.*;
 import org.apache.hadoop.hdfs.protocol.datatransfer.sasl.DataEncryptionKeyFactory;
 import org.apache.hadoop.hdfs.protocol.datatransfer.sasl.InvalidMagicNumberException;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.BlockOpResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ClientReadStatusProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.OpBlockChecksumResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ReadOpChecksumInfoProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ReleaseShortCircuitAccessResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ShortCircuitShmResponseProto;
-import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status;
+import org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.*;
 import org.apache.hadoop.hdfs.protocolPB.PBHelperClient;
 import org.apache.hadoop.hdfs.security.token.block.BlockKey;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
-import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.BlockChecksumComputer;
 import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.AbstractBlockChecksumComputer;
-import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.ReplicatedBlockChecksumComputer;
+import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.BlockChecksumComputer;
 import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.BlockGroupNonStripedChecksumComputer;
+import org.apache.hadoop.hdfs.server.datanode.BlockChecksumHelper.ReplicatedBlockChecksumComputer;
 import org.apache.hadoop.hdfs.server.datanode.DataNode.ShortCircuitFdsUnsupportedException;
 import org.apache.hadoop.hdfs.server.datanode.DataNode.ShortCircuitFdsVersionException;
 import org.apache.hadoop.hdfs.server.datanode.ShortCircuitRegistry.NewShmInfo;
@@ -64,23 +46,15 @@ import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.net.unix.DomainSocket;
 import org.apache.hadoop.security.token.SecretManager.InvalidToken;
 import org.apache.hadoop.security.token.Token;
+import org.apache.hadoop.thirdparty.protobuf.ByteString;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.StopWatch;
 import org.apache.hadoop.util.Time;
 import org.checkerframework.checker.objectconstruction.qual.NotOwning;
 import org.slf4j.Logger;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InterruptedIOException;
-import java.io.OutputStream;
+import javax.crypto.SecretKey;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -91,11 +65,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ShortCircuitFdResponse.DO_NOT_USE_RECEIPT_VERIFICATION;
 import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.ShortCircuitFdResponse.USE_RECEIPT_VERIFICATION;
-import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status.ERROR;
-import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status.ERROR_ACCESS_TOKEN;
-import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status.ERROR_INVALID;
-import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status.ERROR_UNSUPPORTED;
-import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status.SUCCESS;
+import static org.apache.hadoop.hdfs.protocol.proto.DataTransferProtos.Status.*;
 import static org.apache.hadoop.hdfs.server.datanode.DataNode.DN_CLIENTTRACE_FORMAT;
 import static org.apache.hadoop.util.Time.monotonicNow;
 
@@ -220,6 +190,7 @@ class DataXceiver extends Receiver implements Runnable {
    * Read/write data from/to the DataXceiverServer.
    */
   @Override
+  @SuppressWarnings("objectconstruction:required.method.not.called") //TP: input remains open in possible exceptional path
   public void run() {
     int opsProcessed = 0;
     Op op = null;
@@ -347,6 +318,7 @@ class DataXceiver extends Receiver implements Runnable {
   }
 
   @Override
+  @SuppressWarnings({"mustcall:assignment.type.incompatible", "objectconstruction:required.method.not.called"}) //FP: ownership transfer to array
   public void requestShortCircuitFds(final ExtendedBlock blk,
       final Token<BlockTokenIdentifier> token,
       SlotId slotId, int maxVersion, boolean supportsReceiptVerification)
@@ -479,6 +451,7 @@ class DataXceiver extends Receiver implements Runnable {
         setError(error).build().writeDelimitedTo(socketOut);
   }
 
+  @SuppressWarnings("mustcall:assignment.type.incompatible")
   private void sendShmSuccessResponse(DomainSocket sock, NewShmInfo shmInfo)
       throws IOException {
     DataNodeFaultInjector.get().sendShortCircuitShmResponse();
@@ -1076,6 +1049,151 @@ class DataXceiver extends Receiver implements Runnable {
   }
 
   @Override
+  @SuppressWarnings("objectconstruction:required.method.not.called") //TP: proxySock remains open in possible exceptional exit
+  public void replaceBlock(final ExtendedBlock block,
+                           final StorageType storageType,
+                           final Token<BlockTokenIdentifier> blockToken,
+                           final String delHint,
+                           final DatanodeInfo proxySource,
+                           final String storageId) throws IOException {
+    updateCurrentThreadName("Replacing block " + block + " from " + delHint);
+    DataOutputStream replyOut = new DataOutputStream(getOutputStream());
+    checkAccess(replyOut, true, block, blockToken,
+            Op.REPLACE_BLOCK, BlockTokenIdentifier.AccessMode.REPLACE,
+            new StorageType[]{storageType},
+            new String[]{storageId});
+
+    if (!dataXceiverServer.balanceThrottler.acquire()) { // not able to start
+      String msg = "Not able to receive block " + block.getBlockId() +
+              " from " + peer.getRemoteAddressString() + " because threads " +
+              "quota is exceeded.";
+      LOG.warn(msg);
+      sendResponse(ERROR, msg);
+      return;
+    }
+
+    Socket proxySock = null;
+    DataOutputStream proxyOut = null;
+    Status opStatus = SUCCESS;
+    String errMsg = null;
+    DataInputStream proxyReply = null;
+    boolean IoeDuringCopyBlockOperation = false;
+    try {
+      // Move the block to different storage in the same datanode
+      if (proxySource.equals(datanode.getDatanodeId())) {
+        ReplicaInfo oldReplica = datanode.data.moveBlockAcrossStorage(block,
+                storageType, storageId);
+        if (oldReplica != null) {
+          LOG.info("Moved {} from StorageType {} to {}",
+                  block, oldReplica.getVolume().getStorageType(), storageType);
+        }
+      } else {
+        block.setNumBytes(dataXceiverServer.estimateBlockSize);
+        // get the output stream to the proxy
+        final String dnAddr = proxySource.getXferAddr(connectToDnViaHostname);
+        LOG.debug("Connecting to datanode {}", dnAddr);
+        InetSocketAddress proxyAddr = NetUtils.createSocketAddr(dnAddr);
+        proxySock = datanode.newSocket();
+        NetUtils.connect(proxySock, proxyAddr, dnConf.socketTimeout);
+        proxySock.setTcpNoDelay(dnConf.getDataTransferServerTcpNoDelay());
+        proxySock.setSoTimeout(dnConf.socketTimeout);
+        proxySock.setKeepAlive(true);
+
+        OutputStream unbufProxyOut = NetUtils.getOutputStream(proxySock,
+                dnConf.socketWriteTimeout);
+        InputStream unbufProxyIn = NetUtils.getInputStream(proxySock);
+        DataEncryptionKeyFactory keyFactory =
+                datanode.getDataEncryptionKeyFactoryForBlock(block);
+        IOStreamPair saslStreams = datanode.saslClient.socketSend(proxySock,
+                unbufProxyOut, unbufProxyIn, keyFactory, blockToken, proxySource);
+        unbufProxyOut = saslStreams.out;
+        unbufProxyIn = saslStreams.in;
+
+        proxyOut = new DataOutputStream(new BufferedOutputStream(unbufProxyOut,
+                smallBufferSize));
+        proxyReply = new DataInputStream(new BufferedInputStream(unbufProxyIn,
+                ioFileBufferSize));
+
+        /* send request to the proxy */
+        IoeDuringCopyBlockOperation = true;
+        new Sender(proxyOut).copyBlock(block, blockToken);
+        IoeDuringCopyBlockOperation = false;
+
+        // receive the response from the proxy
+
+        BlockOpResponseProto copyResponse = BlockOpResponseProto.parseFrom(
+                PBHelperClient.vintPrefixed(proxyReply));
+
+        String logInfo = "copy block " + block + " from "
+                + proxySock.getRemoteSocketAddress();
+        DataTransferProtoUtil.checkBlockOpStatus(copyResponse, logInfo, true);
+
+        // get checksum info about the block we're copying
+        ReadOpChecksumInfoProto checksumInfo = copyResponse.getReadOpChecksumInfo();
+        DataChecksum remoteChecksum = DataTransferProtoUtil.fromProto(
+                checksumInfo.getChecksum());
+        // open a block receiver and check if the block does not exist
+        setCurrentBlockReceiver(getBlockReceiver(block, storageType,
+                proxyReply, proxySock.getRemoteSocketAddress().toString(),
+                proxySock.getLocalSocketAddress().toString(),
+                null, 0, 0, 0, "", null, datanode, remoteChecksum,
+                CachingStrategy.newDropBehind(), false, false, storageId));
+
+        // receive a block
+        blockReceiver.receiveBlock(null, null, replyOut, null,
+                dataXceiverServer.balanceThrottler, null, true);
+
+        // notify name node
+        final Replica r = blockReceiver.getReplica();
+        datanode.notifyNamenodeReceivedBlock(
+                block, delHint, r.getStorageUuid(), r.isOnTransientStorage());
+
+        LOG.info("Moved {} from {}, delHint={}",
+                block, peer.getRemoteAddressString(), delHint);
+      }
+    } catch (IOException ioe) {
+      opStatus = ERROR;
+      if (ioe instanceof BlockPinningException) {
+        opStatus = Status.ERROR_BLOCK_PINNED;
+      }
+      errMsg = "opReplaceBlock " + block + " received exception " + ioe;
+      LOG.info(errMsg);
+      if (!IoeDuringCopyBlockOperation) {
+        // Don't double count IO errors
+        incrDatanodeNetworkErrors();
+      }
+      throw ioe;
+    } finally {
+      // receive the last byte that indicates the proxy released its thread resource
+      if (opStatus == SUCCESS && proxyReply != null) {
+        try {
+          proxyReply.readChar();
+        } catch (IOException ignored) {
+        }
+      }
+
+      // now release the thread resource
+      dataXceiverServer.balanceThrottler.release();
+
+      // send response back
+      try {
+        sendResponse(opStatus, errMsg);
+      } catch (IOException ioe) {
+        LOG.warn("Error writing reply back to {}",
+                peer.getRemoteAddressString());
+        incrDatanodeNetworkErrors();
+      }
+      IOUtils.closeStream(proxyOut);
+      IOUtils.closeStream(blockReceiver);
+      IOUtils.closeStream(proxyReply);
+      IOUtils.closeStream(replyOut);
+    }
+
+    //update metrics
+    datanode.metrics.addReplaceBlockOp(elapsed());
+  }
+
+  @Override
   public void copyBlock(final ExtendedBlock block,
       final Token<BlockTokenIdentifier> blockToken) throws IOException {
     updateCurrentThreadName("Copying block " + block);
@@ -1090,7 +1208,7 @@ class DataXceiver extends Receiver implements Runnable {
       sendResponse(Status.ERROR_BLOCK_PINNED, msg);
       return;
     }
-    
+
     if (!dataXceiverServer.balanceThrottler.acquire()) { // not able to start
       String msg = "Not able to copy block " + block.getBlockId() + " " +
           "to " + peer.getRemoteAddressString() + " because threads " +
@@ -1105,7 +1223,7 @@ class DataXceiver extends Receiver implements Runnable {
 
     try {
       // check if the block exists or not
-      blockSender = new BlockSender(block, 0, -1, false, false, true, datanode, 
+      blockSender = new BlockSender(block, 0, -1, false, false, true, datanode,
           null, CachingStrategy.newDropBehind());
 
       OutputStream baseStream = getOutputStream();
@@ -1121,7 +1239,7 @@ class DataXceiver extends Receiver implements Runnable {
       datanode.metrics.incrBytesRead((int) read);
       datanode.metrics.incrBlocksRead();
       datanode.metrics.incrTotalReadTime(duration);
-      
+
       LOG.info("Copied {} to {}", block, peer.getRemoteAddressString());
     } catch (IOException ioe) {
       isOpSuccess = false;
@@ -1147,152 +1265,8 @@ class DataXceiver extends Receiver implements Runnable {
       IOUtils.closeStream(blockSender);
     }
 
-    //update metrics    
-    datanode.metrics.addCopyBlockOp(elapsed());
-  }
-
-  @Override
-  public void replaceBlock(final ExtendedBlock block,
-      final StorageType storageType, 
-      final Token<BlockTokenIdentifier> blockToken,
-      final String delHint,
-      final DatanodeInfo proxySource,
-      final String storageId) throws IOException {
-    updateCurrentThreadName("Replacing block " + block + " from " + delHint);
-    DataOutputStream replyOut = new DataOutputStream(getOutputStream());
-    checkAccess(replyOut, true, block, blockToken,
-        Op.REPLACE_BLOCK, BlockTokenIdentifier.AccessMode.REPLACE,
-        new StorageType[]{storageType},
-        new String[]{storageId});
-
-    if (!dataXceiverServer.balanceThrottler.acquire()) { // not able to start
-      String msg = "Not able to receive block " + block.getBlockId() +
-          " from " + peer.getRemoteAddressString() + " because threads " +
-          "quota is exceeded.";
-      LOG.warn(msg);
-      sendResponse(ERROR, msg);
-      return;
-    }
-
-    Socket proxySock = null;
-    DataOutputStream proxyOut = null;
-    Status opStatus = SUCCESS;
-    String errMsg = null;
-    DataInputStream proxyReply = null;
-    boolean IoeDuringCopyBlockOperation = false;
-    try {
-      // Move the block to different storage in the same datanode
-      if (proxySource.equals(datanode.getDatanodeId())) {
-        ReplicaInfo oldReplica = datanode.data.moveBlockAcrossStorage(block,
-            storageType, storageId);
-        if (oldReplica != null) {
-          LOG.info("Moved {} from StorageType {} to {}",
-              block, oldReplica.getVolume().getStorageType(), storageType);
-        }
-      } else {
-        block.setNumBytes(dataXceiverServer.estimateBlockSize);
-        // get the output stream to the proxy
-        final String dnAddr = proxySource.getXferAddr(connectToDnViaHostname);
-        LOG.debug("Connecting to datanode {}", dnAddr);
-        InetSocketAddress proxyAddr = NetUtils.createSocketAddr(dnAddr);
-        proxySock = datanode.newSocket();
-        NetUtils.connect(proxySock, proxyAddr, dnConf.socketTimeout);
-        proxySock.setTcpNoDelay(dnConf.getDataTransferServerTcpNoDelay());
-        proxySock.setSoTimeout(dnConf.socketTimeout);
-        proxySock.setKeepAlive(true);
-
-        OutputStream unbufProxyOut = NetUtils.getOutputStream(proxySock,
-            dnConf.socketWriteTimeout);
-        InputStream unbufProxyIn = NetUtils.getInputStream(proxySock);
-        DataEncryptionKeyFactory keyFactory =
-            datanode.getDataEncryptionKeyFactoryForBlock(block);
-        IOStreamPair saslStreams = datanode.saslClient.socketSend(proxySock,
-            unbufProxyOut, unbufProxyIn, keyFactory, blockToken, proxySource);
-        unbufProxyOut = saslStreams.out;
-        unbufProxyIn = saslStreams.in;
-        
-        proxyOut = new DataOutputStream(new BufferedOutputStream(unbufProxyOut,
-            smallBufferSize));
-        proxyReply = new DataInputStream(new BufferedInputStream(unbufProxyIn,
-            ioFileBufferSize));
-        
-        /* send request to the proxy */
-        IoeDuringCopyBlockOperation = true;
-        new Sender(proxyOut).copyBlock(block, blockToken);
-        IoeDuringCopyBlockOperation = false;
-        
-        // receive the response from the proxy
-        
-        BlockOpResponseProto copyResponse = BlockOpResponseProto.parseFrom(
-            PBHelperClient.vintPrefixed(proxyReply));
-
-        String logInfo = "copy block " + block + " from "
-            + proxySock.getRemoteSocketAddress();
-        DataTransferProtoUtil.checkBlockOpStatus(copyResponse, logInfo, true);
-
-        // get checksum info about the block we're copying
-        ReadOpChecksumInfoProto checksumInfo = copyResponse.getReadOpChecksumInfo();
-        DataChecksum remoteChecksum = DataTransferProtoUtil.fromProto(
-            checksumInfo.getChecksum());
-        // open a block receiver and check if the block does not exist
-        setCurrentBlockReceiver(getBlockReceiver(block, storageType,
-            proxyReply, proxySock.getRemoteSocketAddress().toString(),
-            proxySock.getLocalSocketAddress().toString(),
-            null, 0, 0, 0, "", null, datanode, remoteChecksum,
-            CachingStrategy.newDropBehind(), false, false, storageId));
-        
-        // receive a block
-        blockReceiver.receiveBlock(null, null, replyOut, null, 
-            dataXceiverServer.balanceThrottler, null, true);
-        
-        // notify name node
-        final Replica r = blockReceiver.getReplica();
-        datanode.notifyNamenodeReceivedBlock(
-            block, delHint, r.getStorageUuid(), r.isOnTransientStorage());
-        
-        LOG.info("Moved {} from {}, delHint={}",
-            block, peer.getRemoteAddressString(), delHint);
-      }
-    } catch (IOException ioe) {
-      opStatus = ERROR;
-      if (ioe instanceof BlockPinningException) {
-        opStatus = Status.ERROR_BLOCK_PINNED;
-      }
-      errMsg = "opReplaceBlock " + block + " received exception " + ioe; 
-      LOG.info(errMsg);
-      if (!IoeDuringCopyBlockOperation) {
-        // Don't double count IO errors
-        incrDatanodeNetworkErrors();
-      }
-      throw ioe;
-    } finally {
-      // receive the last byte that indicates the proxy released its thread resource
-      if (opStatus == SUCCESS && proxyReply != null) {
-        try {
-          proxyReply.readChar();
-        } catch (IOException ignored) {
-        }
-      }
-      
-      // now release the thread resource
-      dataXceiverServer.balanceThrottler.release();
-      
-      // send response back
-      try {
-        sendResponse(opStatus, errMsg);
-      } catch (IOException ioe) {
-        LOG.warn("Error writing reply back to {}",
-            peer.getRemoteAddressString());
-        incrDatanodeNetworkErrors();
-      }
-      IOUtils.closeStream(proxyOut);
-      IOUtils.closeStream(blockReceiver);
-      IOUtils.closeStream(proxyReply);
-      IOUtils.closeStream(replyOut);
-    }
-
     //update metrics
-    datanode.metrics.addReplaceBlockOp(elapsed());
+    datanode.metrics.addCopyBlockOp(elapsed());
   }
 
 

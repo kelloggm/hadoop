@@ -17,15 +17,15 @@
  */
 package org.apache.hadoop.hdfs.tools.offlineImageViewer;
 
+import com.google.common.base.Charsets;
+import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
+import org.checkerframework.checker.mustcall.qual.InheritableMustCall;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import com.google.common.base.Charsets;
-import org.checkerframework.checker.calledmethods.qual.EnsuresCalledMethods;
-import org.checkerframework.checker.mustcall.qual.MustCall;
-import org.checkerframework.checker.objectconstruction.qual.Owning;
 
 /**
  * TextWriterImageProcessor mixes in the ability for ImageVisitor
@@ -38,7 +38,7 @@ import org.checkerframework.checker.objectconstruction.qual.Owning;
  * Note, this class does not add newlines to text written to file or (if
  * enabled) screen.  This is the implementing class' responsibility.
  */
-@MustCall("close")
+@InheritableMustCall("close")
 abstract class TextWriterImageVisitor extends ImageVisitor {
   private boolean printToScreen = false;
   private boolean okToWrite = false;

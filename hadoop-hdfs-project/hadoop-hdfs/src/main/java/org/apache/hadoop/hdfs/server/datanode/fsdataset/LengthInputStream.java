@@ -34,7 +34,6 @@ public class LengthInputStream extends FilterInputStream {
    * @param in the underlying input stream.
    * @param length the length of the stream.
    */
-  @SuppressWarnings("mustcall")
   @MustCallChoice public LengthInputStream(@MustCallChoice InputStream in, long length) {
     super(in);
     this.length = length;
@@ -44,8 +43,8 @@ public class LengthInputStream extends FilterInputStream {
   public long getLength() {
     return length;
   }
-  
-  public InputStream getWrappedStream() {
+
+  @MustCallChoice public InputStream getWrappedStream() {
     return in;
   }
 }

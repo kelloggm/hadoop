@@ -101,6 +101,7 @@ class StripedBlockWriter {
    * Initialize  output/input streams for transferring data to target
    * and send create block request.
    */
+  @SuppressWarnings("objectconstruction:required.method.not.called") //FP: can't handle boolean conditions
   private void init() throws IOException {
     Socket socket = null;
     DataOutputStream out = null;

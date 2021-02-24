@@ -268,7 +268,6 @@ public class ShortCircuitRegistry {
     private final ShmId shmId;
     private final @Owning FileInputStream stream;
 
-    @SuppressWarnings("mustcall")
     @MustCallChoice NewShmInfo(ShmId shmId,@MustCallChoice FileInputStream stream) {
       this.shmId = shmId;
       this.stream = stream;

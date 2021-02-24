@@ -17,24 +17,19 @@
  */
 package org.apache.hadoop.hdfs.tools.offlineImageViewer;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.RandomAccessFile;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.cli.*;
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.net.NetUtils;
 import org.apache.hadoop.util.ExitUtil;
 import org.apache.hadoop.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.RandomAccessFile;
 
 /**
  * OfflineImageViewerPB to dump the contents of an Hadoop image file to XML or
@@ -150,6 +145,7 @@ public class OfflineImageViewerPB {
     ExitUtil.terminate(status);
   }
 
+  @SuppressWarnings("objectconstruction:required.method.not.called") //FP: need path sensitive analysis
   public static int run(String[] args) throws Exception {
     Options options = buildOptions();
     if (args.length == 0) {

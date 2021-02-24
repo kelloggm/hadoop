@@ -561,6 +561,7 @@ abstract class PBImageTextWriter implements Closeable {
    */
   abstract protected void afterOutput() throws IOException;
 
+  @SuppressWarnings("objectconstruction:required.method.not.called") //TP: file remains open in possible exceptional exit due to FSImageUtil.checkFileFormat(file)
   public void visit(@Owning RandomAccessFile file) throws IOException {
     Configuration conf = new Configuration();
     if (!FSImageUtil.checkFileFormat(file)) {

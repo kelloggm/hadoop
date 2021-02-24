@@ -86,6 +86,7 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.util.GSet;
 import org.apache.hadoop.util.LightWeightGSet;
 import org.apache.hadoop.util.Time;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1288,7 +1289,7 @@ public class CacheManager {
   }
 
   @VisibleForTesting
-  public Thread getCacheReplicationMonitor() {
+  public @MustCall("close") Thread getCacheReplicationMonitor() {
     crmLock.lock();
     try {
       return monitor;
