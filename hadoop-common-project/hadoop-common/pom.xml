@@ -445,6 +445,7 @@
             <arg>-AcountMustCall</arg>
             <arg>-ArequirePrefixInWarningSuppressions</arg>
             <arg>-AwarnUnneededSuppressions</arg>
+            <arg>-AnoLightweightOwnership</arg>
 <!--            <arg>-AonlyUses=^java</arg>-->
           </compilerArgs>
         </configuration>
